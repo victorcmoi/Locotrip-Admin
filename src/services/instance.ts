@@ -17,7 +17,6 @@ const getAuthHeaders = async () => {
       : await getSession();
 
   if (session) {
-    console.log('Setting auth header with token:', session.accessToken);
     headers["Authorization"] = `Bearer ${session.accessToken}`;
   }
 

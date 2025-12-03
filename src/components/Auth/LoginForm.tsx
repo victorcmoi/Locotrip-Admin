@@ -1,9 +1,9 @@
 "use client";
 
-import React, { useState } from "react";
-import { signIn } from "next-auth/react";
-import { toast } from "sonner";
-import { useRouter } from "next/navigation";
+import React, {useState} from "react";
+import {signIn} from "next-auth/react";
+import {toast} from "sonner";
+import {useRouter} from "next/navigation";
 import Routes from "@/utils/routes";
 
 export default function LoginForm() {
@@ -16,15 +16,15 @@ export default function LoginForm() {
         e.preventDefault();
         setLoading(true);
         signIn("credentials", {
-          redirect: true,
-          callbackUrl: Routes.admin(),
+          redirect: false,
           email: e.currentTarget.email.value,
           password: e.currentTarget.password.value,
-        }).then((res: any) => {
-          // If NextAuth doesn't navigate (e.g., an error occurred), keep UX responsive
-          if (res && res.error) {
+        }).then(({error}: any) => {
+          if (error) {
             setLoading(false);
-            toast.error(res.error);
+            toast.error(error);
+          } else {
+            router.replace(Routes.dashboard());
           }
         });
       }}

@@ -1,15 +1,11 @@
 import { redirect } from "next/navigation";
 import React from "react";
-import { getMe } from "@/services/users/getMe";
 import { checkLogin } from "@/lib/auth";
 import AdminRoutes from "@/utils/routes";
 import AuthHandler from "@/components/Auth/AuthHandler";
 import Link from "next/link";
-import { UserRole } from "@/schemas/user";
-import type { UserApiResponseSchema } from "@/schemas/user";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/app/api/auth/[...nextauth]/authOptions";
-import { jwtDecode } from "jwt-decode";
 import {UserCircleIcon} from "@heroicons/react/24/solid";
 import Image from "next/image";
 import logo from "@/assets/images/logo_square.png";
@@ -19,27 +15,17 @@ type LayoutProps = {
 };
 
 export default async function Layout({ children }: LayoutProps) {
+
   if (!(await checkLogin())) {
     redirect(AdminRoutes.login());
   }
 
   const session = await getServerSession(authOptions);
+  console.log(session)
   const token = session?.accessToken;
+
   if (!token) {
     redirect(AdminRoutes.login());
-  }
-  const decoded = jwtDecode<{ role?: string; email?: string }>(token!);
-  if (decoded?.role !== UserRole.ADMIN) {
-    redirect(AdminRoutes.login());
-
-  }
-
-  type FallbackUser = Pick<UserApiResponseSchema, 'firstName' | 'lastName' | 'role'> & { email?: string };
-  let user: UserApiResponseSchema | FallbackUser | null = null;
-  try {
-    user = await getMe();
-  } catch {
-    user = { firstName: '', lastName: '', role: UserRole.ADMIN, email: decoded?.email };
   }
 
   return (

@@ -3,7 +3,6 @@ import React from "react";
 import { checkLogin } from "@/lib/auth";
 import AdminRoutes from "@/utils/routes";
 import LoginForm from "@/components/Auth/LoginForm";
-import Image from "next/image";
 import Link from "next/link";
 
 export default async function Page() {
