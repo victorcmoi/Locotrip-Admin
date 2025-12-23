@@ -4,9 +4,32 @@ import CredentialsProvider from 'next-auth/providers/credentials';
 declare module 'next-auth' {
   interface Session {
     accessToken: string;
+    user: {
+      id: string;
+      email: string;
+      firstName: string;
+      lastName: string;
+      role: string;
+    };
   }
   interface User {
     accessToken: string;
+    id: string;
+    email: string;
+    firstName: string;
+    lastName: string;
+    role: string;
+  }
+}
+
+declare module 'next-auth/jwt' {
+  interface JWT {
+    accessToken: string;
+    id: string;
+    email: string;
+    firstName: string;
+    lastName: string;
+    role: string;
   }
 }
 
@@ -15,11 +38,23 @@ export const authOptions: NextAuthOptions = {
     async jwt({ token, user }) {
       if (user) {
         token.accessToken = user.accessToken;
+        token.id = user.id;
+        token.email = user.email;
+        token.firstName = user.firstName;
+        token.lastName = user.lastName;
+        token.role = user.role;
       }
       return token;
     },
     async session({ session, token }) {
       session.accessToken = token.accessToken as string;
+      session.user = {
+        id: token.id as string,
+        email: token.email as string,
+        firstName: token.firstName as string,
+        lastName: token.lastName as string,
+        role: token.role as string,
+      };
       return session;
     },
   },
@@ -43,19 +78,27 @@ export const authOptions: NextAuthOptions = {
           },
           body: JSON.stringify({
             email,
-            password
+            password,
+            requiredRole: 'admin'
           }),
         });
 
         console.log(response);
 
-        const user = await response.json();
+        const data = await response.json();
 
         if (response.ok) {
-          return { id: user.id, email: user.email, accessToken: user.token}
+          return {
+            id: data.user.id,
+            email: data.user.email,
+            accessToken: data.token,
+            firstName: data.user.firstName,
+            lastName: data.user.lastName,
+            role: data.user.role,
+          }
         }
 
-        throw new Error(user.message);
+        throw new Error(data.message);
       },
     }),
   ],
