@@ -1,9 +1,9 @@
 "use client";
 
-import React, {useState} from "react";
-import {signIn} from "next-auth/react";
-import {toast} from "sonner";
-import {useRouter} from "next/navigation";
+import React, { useState } from "react";
+import { signIn } from "next-auth/react";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 import Routes from "@/utils/routes";
 
 export default function LoginForm() {
@@ -19,7 +19,7 @@ export default function LoginForm() {
           redirect: false,
           email: e.currentTarget.email.value,
           password: e.currentTarget.password.value,
-        }).then(({error}: any) => {
+        }).then(({ error }: any) => {
           if (error) {
             setLoading(false);
             toast.error(error);
@@ -41,7 +41,7 @@ export default function LoginForm() {
             type="email"
             required
             autoComplete="email"
-            className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-green-600 sm:text-sm/6"
+            className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-surfie-green-600 sm:text-sm/6"
           />
         </div>
       </div>
@@ -70,7 +70,7 @@ export default function LoginForm() {
                 id="remember-me"
                 name="remember-me"
                 type="checkbox"
-                className="col-start-1 row-start-1 appearance-none rounded-sm border border-gray-300 bg-white checked:border-green-600 checked:bg-green-600 indeterminate:border-green-600 indeterminate:bg-green-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600 disabled:border-gray-300 disabled:bg-gray-100 disabled:checked:bg-gray-100 forced-colors:appearance-auto"
+                className="col-start-1 row-start-1 appearance-none rounded-sm border border-gray-300 bg-white checked:border-surfie-green-600 checked:bg-surfie-green-600 indeterminate:border-surfie-green-600 indeterminate:bg-surfie-green-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-surfie-green-600 disabled:border-gray-300 disabled:bg-gray-100 disabled:checked:bg-gray-100 forced-colors:appearance-auto"
               />
               <svg
                 fill="none"
@@ -100,7 +100,7 @@ export default function LoginForm() {
         </div>
 
         <div className="text-sm/6">
-          <a href="#" className="font-semibold text-green-600 hover:text-green-500">
+          <a href="#" className="font-semibold text-surfie-green-600 hover:text-surfie-green-500">
             Mot de passe oublié ?
           </a>
         </div>
@@ -110,7 +110,7 @@ export default function LoginForm() {
         <button
           type="submit"
           disabled={loading}
-          className="flex w-full justify-center rounded-md bg-green-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-xs hover:bg-green-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600"
+          className="flex w-full justify-center rounded-md bg-surfie-green-700 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-xs hover:bg-surfie-green-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600"
         >
           Se connecter
         </button>

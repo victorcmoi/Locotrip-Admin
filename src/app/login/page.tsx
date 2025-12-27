@@ -18,7 +18,7 @@ export default async function Page() {
             <h2 className="mt-8 text-2xl/9 font-bold tracking-tight text-gray-900">Connectez-vous à votre compte</h2>
             <p className="mt-2 text-sm/6 text-gray-500">
               Un problème ?{' '}
-              <Link href="#" className="font-semibold text-green-600 hover:text-green-500">
+              <Link href="#" className="font-semibold text-surfie-green-600 hover:text-surfie-green-500">
                 Contactez-nous
               </Link>
             </p>

@@ -14,16 +14,16 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="fr">
+    <html lang="en">
       <body
         className="flex flex-col h-screen antialiased"
       >
-      <QueryClientProvider>
-        <NextAuthProvider>
-          {children}
-          <Toaster richColors />
-        </NextAuthProvider>
-      </QueryClientProvider>
+        <QueryClientProvider>
+          <NextAuthProvider>
+            {children}
+            <Toaster richColors />
+          </NextAuthProvider>
+        </QueryClientProvider>
       </body>
     </html>
   );

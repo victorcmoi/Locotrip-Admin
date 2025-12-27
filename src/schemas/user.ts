@@ -21,15 +21,31 @@ export const updateUserSchema = z.object({
 })
 
 const userApiSuccessResponseSchema = z.object({
-  id: z.string().cuid(),
+  id: z.string().uuid(),
   email: z.string().email(),
-  firstName: z.string(),
-  lastName: z.string(),
+  first_name: z.string(),
+  last_name: z.string(),
   role: z.nativeEnum(UserRole),
-});
+  is_active: z.boolean().optional(),
+  is_verified: z.boolean().optional(),
+  created_at: z.string().or(z.date()).optional(),
+  updated_at: z.string().or(z.date()).optional(),
+  guides: z.array(z.any()).optional(),
+  bookings: z.array(z.any()).optional(),
+  reviews: z.array(z.any()).optional(),
+  subscriptions: z.array(z.any()).optional(),
+}).passthrough();
 
 export const userApiResponseSchema = userApiSuccessResponseSchema;
-export const usersApiResponseSchema = z.array(userApiSuccessResponseSchema);
+export const usersApiResponseSchema = z.object({
+  data: z.array(userApiSuccessResponseSchema),
+  meta: z.object({
+    page: z.number(),
+    limit: z.number(),
+    total: z.number(),
+    totalPages: z.number(),
+  }).passthrough(),
+}).passthrough();
 
 export type UserApiResponseSchema = z.infer<typeof userApiResponseSchema>;
 export type UsersApiResponseSchema = z.infer<typeof usersApiResponseSchema>;

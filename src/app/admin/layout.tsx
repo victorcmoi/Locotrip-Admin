@@ -39,9 +39,6 @@ export default async function Layout({ children }: LayoutProps) {
               <Link href={AdminRoutes.dashboard()} className="flex items-center gap-2 rounded-md px-3 py-2 hover:bg-black/10 duration-300">
                 Dashboard
               </Link>
-              <Link href={AdminRoutes.guides()} className="flex items-center gap-2 rounded-md px-3 py-2 hover:bg-black/10 duration-300">
-                Guides
-              </Link>
               <Link href={AdminRoutes.users()} className="flex items-center gap-2 rounded-md px-3 py-2 hover:bg-black/10 duration-300">
                 Utilisateurs
               </Link>

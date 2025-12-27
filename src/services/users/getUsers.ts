@@ -1,14 +1,14 @@
 import { useQuery } from '@tanstack/react-query';
 import { ApiRequest } from '@/services/instance';
-import { guidesSchema, GuidesSchema } from '@/schemas/guide';
+import { usersApiResponseSchema, UsersApiResponseSchema } from '@/schemas/user';
 
 export const getUsers = async () => {
-  return new ApiRequest<GuidesSchema>(guidesSchema).get('guides');
+  return new ApiRequest<UsersApiResponseSchema>(usersApiResponseSchema).get('users');
 };
 
 export const useUsers = () => {
   return useQuery({
-    queryKey: ['guides'],
+    queryKey: ['users'],
     queryFn: () => getUsers(),
   });
 };
