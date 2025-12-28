@@ -12,4 +12,16 @@
     --color-surfie-green-800: #115e5d;
     --color-surfie-green-900: #134e4d;
     --color-surfie-green-950: #042e2f;
+
+    --color-lightning-yellow-50: #fffaeb;
+    --color-lightning-yellow-100: #feefc7;
+    --color-lightning-yellow-200: #fddd8a;
+    --color-lightning-yellow-300: #fcc13d; /* Primary */
+    --color-lightning-yellow-400: #fbaf24;
+    --color-lightning-yellow-500: #f58d0b;
+    --color-lightning-yellow-600: #d96706;
+    --color-lightning-yellow-700: #b44609;
+    --color-lightning-yellow-800: #92360e;
+    --color-lightning-yellow-900: #782d0f;
+    --color-lightning-yellow-950: #451503;
 }
