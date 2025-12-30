@@ -19,7 +19,11 @@ class AdminRoutes {
   }
 
   public static users() {
-     return `${this.PATH_ADMIN}/users`;
+    return `${this.PATH_ADMIN}/users`;
+  }
+
+  public static userDetail(id: string) {
+    return `${this.PATH_ADMIN}/users/${id}`;
   }
 
   public static dashboard() {

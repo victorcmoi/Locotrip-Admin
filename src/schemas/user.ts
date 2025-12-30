@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { addressSchema } from './address';
 
 export enum UserRole {
   ADMIN = 'admin',
@@ -25,15 +26,20 @@ const userApiSuccessResponseSchema = z.object({
   email: z.string().email(),
   first_name: z.string(),
   last_name: z.string(),
+  phone: z.string().nullable().optional(),
+  birth_date: z.string().or(z.date()).nullable().optional(),
   role: z.nativeEnum(UserRole),
   is_active: z.boolean().optional(),
   is_verified: z.boolean().optional(),
   created_at: z.string().or(z.date()).optional(),
   updated_at: z.string().or(z.date()).optional(),
+  address: addressSchema.nullable().optional(),
   guides: z.array(z.any()).optional(),
   bookings: z.array(z.any()).optional(),
   reviews: z.array(z.any()).optional(),
   subscriptions: z.array(z.any()).optional(),
+  marketing_consent: z.boolean().optional(),
+  data_processing_consent: z.boolean().optional(),
 }).passthrough();
 
 export const userApiResponseSchema = userApiSuccessResponseSchema;

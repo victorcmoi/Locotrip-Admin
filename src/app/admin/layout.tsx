@@ -21,7 +21,6 @@ export default async function Layout({ children }: LayoutProps) {
   }
 
   const session = await getServerSession(authOptions);
-  console.log(session)
   const token = session?.accessToken;
 
   if (!token) {
@@ -30,9 +29,9 @@ export default async function Layout({ children }: LayoutProps) {
 
   return (
     <AuthHandler>
-      <div className="flex min-h-screen p-8 gap-8 bg-gray-100">
+      <div className="flex gap-8 bg-gray-100">
         {/* Sidebar */}
-        <aside className="w-64 flex flex-col gap-4">
+        <aside className="h-screen p-8 w-72 flex flex-col gap-4 sticky top-0">
           <Image src={logo} alt="Logo Locotrip" className="w-full h-fit object-contain px-4 py-2" />
           <div className="bg-surfie-green-700 flex flex-col justify-between flex-1 p-4 rounded-lg">
             <nav className="flex flex-col gap-2 text-white font-semibold">
@@ -56,7 +55,7 @@ export default async function Layout({ children }: LayoutProps) {
           </div>
         </aside>
         {/* Main content */}
-        <main className="flex-1">
+        <main className="flex-1 py-8 pr-8">
           {children}
         </main>
       </div>

@@ -3,7 +3,14 @@
 import React, { useState, useEffect } from "react";
 import { useUsers } from "@/services/users/getUsers";
 import { UserRole } from "@/schemas/user";
-import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
+import { ArrowTopRightOnSquareIcon, MagnifyingGlassIcon, TrashIcon } from "@heroicons/react/24/outline";
+import Link from "next/link";
+import AdminRoutes from "@/utils/routes";
+import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
+
+dayjs.extend(relativeTime);
+dayjs.locale("fr");
 
 export default function Page() {
   const [roleFilter, setRoleFilter] = useState<UserRole | "">("");
@@ -86,9 +93,6 @@ export default function Page() {
           </div>
         ) : users.length === 0 ? (
           <div className="p-12 text-center">
-            <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gray-100 mb-4">
-              <span className="text-2xl">👤</span>
-            </div>
             <p className="text-gray-600 font-medium">Aucun utilisateur trouvé.</p>
           </div>
         ) : (
@@ -99,6 +103,7 @@ export default function Page() {
                 <th className="px-6 py-4 text-left text-xs font-bold text-white uppercase tracking-wider">Prénom</th>
                 <th className="px-6 py-4 text-left text-xs font-bold text-white uppercase tracking-wider">Email</th>
                 <th className="px-6 py-4 text-left text-xs font-bold text-white uppercase tracking-wider">Rôle</th>
+                <th className="px-6 py-4 text-left text-xs font-bold text-white uppercase tracking-wider">Création</th>
                 <th className="px-6 py-4 text-left text-xs font-bold text-white uppercase tracking-wider">Actions</th>
               </tr>
             </thead>
@@ -118,7 +123,19 @@ export default function Page() {
                       {user.role}
                     </span>
                   </td>
-                  <td className="px-6 py-4 text-sm">
+                  <td className="px-6 py-4 text-sm text-gray-700">
+                    {user.created_at ? dayjs(user.created_at).format("D MMMM YYYY") : "Non renseigné"}
+                  </td>
+                  <td className="px-6 py-4 text-sm flex gap-2">
+                    <Link
+                      href={AdminRoutes.userDetail(user.id)}
+                      className="bg-gray-100 p-2 rounded-lg w-fit aspect-square hover:bg-gray-200 duration-300"
+                    >
+                      <ArrowTopRightOnSquareIcon className="h-5 w-5 text-gray-600" />
+                    </Link>
+                    <div className="bg-red-100 p-2 rounded-lg w-fit aspect-square hover:bg-red-200 duration-300">
+                      <TrashIcon className="h-5 w-5 text-red-600" />
+                    </div>
                   </td>
                 </tr>
               ))}
