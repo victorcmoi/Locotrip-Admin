@@ -2,12 +2,15 @@
 
 import React, { useState, useEffect } from "react";
 import { useUsers } from "@/services/users/getUsers";
-import { UserRole } from "@/schemas/user";
-import { ArrowTopRightOnSquareIcon, MagnifyingGlassIcon, TrashIcon } from "@heroicons/react/24/outline";
+import { UserRole, UserApiResponseSchema } from "@/schemas/user";
+import { ArrowTopRightOnSquareIcon, MagnifyingGlassIcon, TrashIcon, PlusIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
 import AdminRoutes from "@/utils/routes";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
+import CreateUserModal from "@/components/CreateUserModal";
+import ConfirmDeleteModal from "@/components/ConfirmDeleteModal";
+import { useDeleteUser } from "@/services/users/deleteUser";
 
 dayjs.extend(relativeTime);
 dayjs.locale("fr");
@@ -16,6 +19,10 @@ export default function Page() {
   const [roleFilter, setRoleFilter] = useState<UserRole | "">("");
   const [searchQuery, setSearchQuery] = useState("");
   const [debouncedSearch, setDebouncedSearch] = useState("");
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [userToDelete, setUserToDelete] = useState<UserApiResponseSchema | null>(null);
+
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -30,15 +37,53 @@ export default function Page() {
     search: debouncedSearch || undefined,
   });
 
+  const { mutate: deleteUser, isPending: isDeleting } = useDeleteUser();
+
   const users = response?.data || [];
+
+  const handleDeleteClick = (user: UserApiResponseSchema) => {
+    setUserToDelete(user);
+    setIsDeleteModalOpen(true);
+  };
+
+  const handleConfirmDelete = (reason?: string) => {
+    if (userToDelete) {
+      deleteUser({ userId: userToDelete.id, reason }, {
+        onSuccess: () => {
+          setIsDeleteModalOpen(false);
+          setUserToDelete(null);
+        },
+        onError: () => {
+          setIsDeleteModalOpen(false);
+          setUserToDelete(null);
+        },
+      });
+    }
+  };
+
+  const handleCloseDeleteModal = () => {
+    if (!isDeleting) {
+      setIsDeleteModalOpen(false);
+      setUserToDelete(null);
+    }
+  };
 
   return (
     <div className="space-y-12 pt-8">
-      <div className="border-l-4 border-surfie-green-600 pl-4">
-        <h1 className="text-5xl font-bold text-gray-900">
-          Utilisateurs
-        </h1>
-        <p className="text-sm text-gray-600 mt-2">Gérez les utilisateurs de la plateforme Locotrip</p>
+      <div className="flex items-start justify-between gap-4">
+        <div className="border-l-4 border-surfie-green-600 pl-4">
+          <h1 className="text-5xl font-bold text-gray-900">
+            Utilisateurs
+          </h1>
+          <p className="text-sm text-gray-600 mt-2">Gérez les utilisateurs de la plateforme Locotrip</p>
+        </div>
+        <button
+          onClick={() => setIsCreateModalOpen(true)}
+          className="flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r from-surfie-green-700 to-surfie-green-600 text-white font-semibold rounded-lg hover:from-surfie-green-800 hover:to-surfie-green-700 transition-all duration-200 shadow-md"
+        >
+          <PlusIcon className="h-5 w-5" />
+          Créer un utilisateur
+        </button>
       </div>
 
       <div className="bg-white p-6 rounded-lg shadow-sm border-t-4 border-t-surfie-green-600">
@@ -133,9 +178,13 @@ export default function Page() {
                     >
                       <ArrowTopRightOnSquareIcon className="h-5 w-5 text-gray-600" />
                     </Link>
-                    <div className="bg-red-100 p-2 rounded-lg w-fit aspect-square hover:bg-red-200 duration-300">
+                    <button
+                      onClick={() => handleDeleteClick(user)}
+                      className="bg-red-100 p-2 rounded-lg w-fit aspect-square hover:bg-red-200 duration-300 cursor-pointer"
+                      aria-label="Supprimer l'utilisateur"
+                    >
                       <TrashIcon className="h-5 w-5 text-red-600" />
-                    </div>
+                    </button>
                   </td>
                 </tr>
               ))}
@@ -149,6 +198,19 @@ export default function Page() {
           Affichage de <strong className="font-bold">{users.length}</strong> utilisateur{users.length > 1 ? 's' : ''} sur <strong className="font-bold">{response.meta.total}</strong> au total
         </div>
       )}
+
+      <CreateUserModal
+        isOpen={isCreateModalOpen}
+        onClose={() => setIsCreateModalOpen(false)}
+      />
+
+      <ConfirmDeleteModal
+        isOpen={isDeleteModalOpen}
+        onClose={handleCloseDeleteModal}
+        onConfirm={handleConfirmDelete}
+        userName={userToDelete ? `${userToDelete.first_name} ${userToDelete.last_name}` : ''}
+        isDeleting={isDeleting}
+      />
     </div>
   );
 }

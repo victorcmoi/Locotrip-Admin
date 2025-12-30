@@ -12,6 +12,7 @@ export const createUserSchema = z.object({
   role: z.nativeEnum(UserRole),
   firstName: z.string({ invalid_type_error: 'Merci d\'entrer le prénom.', required_error: 'Ce champ est requis.' }).min(1, { message: 'Ce champ est requis.' }),
   lastName: z.string({ invalid_type_error: 'Merci d\'entrer le nom.', required_error: 'Ce champ est requis.' }).min(1, { message: 'Ce champ est requis.' }),
+  password: z.string({ invalid_type_error: 'Merci d\'entrer le mot de passe.', required_error: 'Ce champ est requis.' }).min(8, { message: 'Le mot de passe doit contenir au moins 8 caractères.' }),
 })
 
 export const updateUserSchema = z.object({

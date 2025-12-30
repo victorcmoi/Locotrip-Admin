@@ -250,10 +250,10 @@ export default function Page() {
                               </span>
                             </td>
                             <td className="px-6 py-4 text-sm text-gray-700">
-                              {doc.upload_date}
+                              {doc.upload_date ? dayjs(doc.upload_date).format("D MMMM YYYY") : "Non renseigné"}
                             </td>
                             <td className="px-6 py-4 text-sm text-gray-700">
-                              {doc.verification_date}
+                              {doc.verification_date ? dayjs(doc.verification_date).format("D MMMM YYYY") : "Non renseigné"}
                             </td>
                           </tr>
                         ))}

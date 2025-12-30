@@ -34,6 +34,7 @@ declare module 'next-auth/jwt' {
 }
 
 export const authOptions: NextAuthOptions = {
+  secret: process.env.NEXTAUTH_SECRET,
   callbacks: {
     async jwt({ token, user }) {
       if (user) {
@@ -79,11 +80,9 @@ export const authOptions: NextAuthOptions = {
           body: JSON.stringify({
             email,
             password,
-            requiredRole: 'admin'
+            requiredRole: 'ADMIN'
           }),
         });
-
-        console.log(response);
 
         const data = await response.json();
 

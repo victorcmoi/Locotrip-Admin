@@ -68,8 +68,12 @@ export class ApiRequest<T> {
     });
   }
 
-  public async delete(url: string): Promise<T> {
-    return this.request(url, { method: "DELETE" });
+  public async delete(url: string, body?: any): Promise<T> {
+    return this.request(url, {
+      method: "DELETE",
+      body: body ? JSON.stringify(body) : undefined,
+      headers: body ? { "Content-Type": "application/json" } : {},
+    });
   }
 
   private async run(response: Response) {
@@ -84,6 +88,9 @@ export class ApiRequest<T> {
     }
 
     const error = apiErrorResponseSchema.parse(body);
-    throw new Error((error.message || error.error) ?? "unknown error");
+    const errorMessage = Array.isArray(error.message)
+      ? error.message.join(", ")
+      : error.message || error.error || "unknown error";
+    throw new Error(errorMessage);
   }
 }
