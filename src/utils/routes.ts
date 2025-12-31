@@ -29,6 +29,10 @@ class AdminRoutes {
   public static dashboard() {
     return `${this.PATH_ADMIN}/dashboard`;
   }
+
+  public static tickets() {
+    return `${this.PATH_ADMIN}/tickets`;
+  }
 }
 
 export default AdminRoutes;

@@ -76,14 +76,15 @@ export class ApiRequest<T> {
     });
   }
 
-  private async run(response: Response) {
+  private async run(response: Response): Promise<T> {
     const body = await response.json();
 
     if (response.ok) {
       try {
         return this._schema.parse(body);
       } catch (e) {
-        console.error(e);
+        console.error("Schema validation failed:", e);
+        throw new Error("Invalid response format from API");
       }
     }
 
