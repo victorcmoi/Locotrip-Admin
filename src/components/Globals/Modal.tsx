@@ -3,14 +3,29 @@
 import React, { useEffect, useRef } from "react";
 import { XMarkIcon } from "@heroicons/react/24/outline";
 
-interface ModalProps {
+type ModalSize = "small" | "medium" | "large";
+
+type ModalProps = {
   isOpen: boolean;
+  size?: ModalSize;
   onClose: () => void;
   title: string;
   children: React.ReactNode;
-}
+};
 
-export default function Modal({ isOpen, onClose, title, children }: ModalProps) {
+const SIZE_CLASSES: Record<ModalSize, string> = {
+  small: "max-w-md",
+  medium: "max-w-lg",
+  large: "max-w-2xl",
+};
+
+export default function Modal({
+  isOpen,
+  size = "medium",
+  onClose,
+  title,
+  children,
+}: ModalProps) {
   const modalRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -25,12 +40,7 @@ export default function Modal({ isOpen, onClose, title, children }: ModalProps) 
   }, [isOpen, onClose]);
 
   useEffect(() => {
-    if (isOpen) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "unset";
-    }
-
+    document.body.style.overflow = isOpen ? "hidden" : "unset";
     return () => {
       document.body.style.overflow = "unset";
     };
@@ -49,7 +59,12 @@ export default function Modal({ isOpen, onClose, title, children }: ModalProps) 
     >
       <div
         ref={modalRef}
-        className="bg-white rounded-xl shadow-2xl w-full max-w-md max-h-[90vh] overflow-y-auto animate-in zoom-in-95 duration-200"
+        className={`
+          bg-white rounded-xl shadow-2xl w-full
+          ${SIZE_CLASSES[size]}
+          max-h-[90vh] overflow-y-auto
+          animate-in zoom-in-95 duration-200
+        `}
         onClick={(e) => e.stopPropagation()}
       >
         <div className="sticky top-0 bg-gradient-to-r from-surfie-green-700 to-surfie-green-600 px-6 py-4 flex items-center justify-between border-b border-surfie-green-800">
@@ -62,6 +77,7 @@ export default function Modal({ isOpen, onClose, title, children }: ModalProps) 
             <XMarkIcon className="h-6 w-6" />
           </button>
         </div>
+
         <div className="p-6">{children}</div>
       </div>
     </div>

@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import Modal from "@/components/ui/Modal";
+import Modal from "@/components/Globals/Modal";
 import { ExclamationTriangleIcon } from "@heroicons/react/24/outline";
 
 interface ConfirmDeleteModalProps {
@@ -32,7 +32,7 @@ export default function ConfirmDeleteModal({
   };
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} title="Confirmer la suppression">
+    <Modal isOpen={isOpen} onClose={onClose} title="Confirmer la suppression" size="small">
       <div className="space-y-4">
         <div className="flex items-start gap-4">
           <div className="flex-shrink-0">

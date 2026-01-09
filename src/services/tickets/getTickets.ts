@@ -6,9 +6,14 @@ const getTickets = async (): Promise<SupportTicketsSchema> => {
     return new ApiRequest<SupportTicketsSchema>(supportTicketsSchema).get("support-tickets");
 };
 
-export const useTickets = () => {
-    return useQuery({
-        queryKey: ["tickets"],
-        queryFn: getTickets,
-    });
+export function useTickets() {
+  const query = useQuery({
+    queryKey: ["tickets"],
+    queryFn: getTickets,
+  });
+
+  return {
+    ...query,
+    mutate: query.refetch,
+  };
 };

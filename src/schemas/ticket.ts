@@ -7,6 +7,17 @@ export enum SupportTicketStatus {
     CLOSED = "closed",
 }
 
+export const sendTicketMessageSchema = z.object({
+  ticket_id: z.string().uuid(),
+  author_id: z.string().uuid(),
+  content: z.string().min(1),
+});
+
+
+export const updateTicketResponseSchema = z.object({
+  message: z.string().optional(),
+}).passthrough();
+
 export const ticketMessageSchema = z.object({
     id: z.string().uuid(),
     ticket_id: z.string().uuid(),
@@ -29,6 +40,9 @@ export const supportTicketSchema = z.object({
 });
 
 export type SupportTicketSchema = z.infer<typeof supportTicketSchema>;
+export type UpdateTicketResponse = z.infer<typeof updateTicketResponseSchema>;
+export type SendTicketMessageInput = z.infer<typeof sendTicketMessageSchema>;
+
 
 export const supportTicketsSchema = z.array(supportTicketSchema);
 

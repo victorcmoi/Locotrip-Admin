@@ -8,8 +8,8 @@ import Link from "next/link";
 import AdminRoutes from "@/utils/routes";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
-import CreateUserModal from "@/components/CreateUserModal";
-import ConfirmDeleteModal from "@/components/ConfirmDeleteModal";
+import CreateUserModal from "@/components/Users/CreateUserModal";
+import ConfirmDeleteModal from "@/components/Users/ConfirmDeleteModal";
 import { useDeleteUser } from "@/services/users/deleteUser";
 
 dayjs.extend(relativeTime);

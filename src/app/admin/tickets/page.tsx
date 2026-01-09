@@ -2,12 +2,14 @@
 
 import React, { useState, useEffect } from "react";
 import { useTickets } from "@/services/tickets/getTickets";
-import { SupportTicketStatus } from "@/schemas/ticket";
+import { SupportTicketStatus, SupportTicketSchema } from "@/schemas/ticket";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import "dayjs/locale/fr";
 import Link from "next/link";
+import TicketMessagesModal from "@/components/Tickets/TicketMessagesModal";
+import TicketStatusBadge from "@/components/Tickets/TicketStatusBadge";
 
 dayjs.extend(relativeTime);
 dayjs.locale("fr");
@@ -16,6 +18,8 @@ export default function Page() {
   const [statusFilter, setStatusFilter] = useState<SupportTicketStatus | "">("");
   const [searchQuery, setSearchQuery] = useState("");
   const [debouncedSearch, setDebouncedSearch] = useState("");
+  const [selectedTicket, setSelectedTicket] = useState<SupportTicketSchema | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -25,7 +29,27 @@ export default function Page() {
     return () => clearTimeout(timer);
   }, [searchQuery]);
 
-  const { data: tickets, isLoading, error } = useTickets();
+  const { data: tickets, isLoading, error, mutate } = useTickets();
+
+  const handleOpenModal = (ticket: SupportTicketSchema) => {
+    setSelectedTicket(ticket);
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setSelectedTicket(null);
+  };
+
+  const handleReplySent = async () => {
+    // Refresh the tickets list
+    await mutate();
+  };
+
+  const handleStatusUpdated = async () => {
+    // Refresh the tickets list after status update
+    await mutate();
+  };
 
   const filteredTickets = tickets?.filter((ticket) => {
     const matchesSearch =
@@ -38,32 +62,6 @@ export default function Page() {
 
     return matchesSearch && matchesStatus;
   }) || [];
-
-  const getStatusBadgeClass = (status: SupportTicketStatus) => {
-    switch (status) {
-      case SupportTicketStatus.OPEN:
-        return "bg-red-500 text-white";
-      case SupportTicketStatus.IN_PROGRESS:
-        return "bg-lightning-yellow-300 text-white";
-      case SupportTicketStatus.CLOSED:
-        return "bg-surfie-green-600 text-white";
-      default:
-        return "bg-gray-200 text-gray-700";
-    }
-  };
-
-  const getStatusLabel = (status: SupportTicketStatus) => {
-    switch (status) {
-      case SupportTicketStatus.OPEN:
-        return "Ouvert";
-      case SupportTicketStatus.IN_PROGRESS:
-        return "En cours";
-      case SupportTicketStatus.CLOSED:
-        return "Fermé";
-      default:
-        return status;
-    }
-  };
 
   return (
     <div className="space-y-12 pt-8">
@@ -116,7 +114,7 @@ export default function Page() {
         </div>
       </div>
 
-      <div className="overflow-hidden rounded-lg border-2 border-gray-200 bg-white shadow-md">
+      <div className="rounded-lg border-2 border-gray-200 bg-white shadow-md">
         {isLoading ? (
           <div className="p-12 text-center">
             <div className="inline-block animate-spin rounded-full h-10 w-10 border-4 border-surfie-green-200 border-t-surfie-green-600"></div>
@@ -153,14 +151,20 @@ export default function Page() {
                     </Link>
                   </td>
                   <td className="px-6 py-4 text-sm">
-                    <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wide shadow-sm ${getStatusBadgeClass(ticket.status)}`}>
-                      {getStatusLabel(ticket.status)}
-                    </span>
+                    <TicketStatusBadge
+                      ticketId={ticket.id}
+                      currentStatus={ticket.status}
+                      onStatusUpdated={handleStatusUpdated}
+                    />
                   </td>
                   <td className="px-6 py-4 text-sm text-gray-700">
-                    <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-surfie-green-100 text-surfie-green-700 font-bold">
-                      {ticket.messages.length}
-                    </span>
+                    <button
+                      onClick={() => handleOpenModal(ticket)}
+                      className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-surfie-green-100 text-surfie-green-700 font-bold hover:bg-surfie-green-200 transition-colors cursor-pointer"
+                      title="Voir les messages"
+                    >
+                      {ticket.messages?.length || 0}
+                    </button>
                   </td>
                   <td className="px-6 py-4 text-sm text-gray-700">
                     {ticket.created_at ? dayjs(ticket.created_at).format("D MMMM YYYY") : "Non renseigné"}
@@ -179,6 +183,15 @@ export default function Page() {
         <div className="text-sm">
           Affichage de <strong className="font-bold">{filteredTickets.length}</strong> ticket{filteredTickets.length > 1 ? 's' : ''} sur <strong className="font-bold">{tickets.length}</strong> au total
         </div>
+      )}
+
+      {selectedTicket && (
+        <TicketMessagesModal
+          ticket={selectedTicket}
+          isOpen={isModalOpen}
+          onClose={handleCloseModal}
+          onReplySent={handleReplySent}
+        />
       )}
     </div>
   );

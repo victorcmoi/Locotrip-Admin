@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import Modal from "@/components/ui/Modal";
+import Modal from "@/components/Globals/Modal";
 import { useCreateUser } from "@/services/users/createUser";
 import { CreateUserSchema, UserRole } from "@/schemas/user";
 import { z } from "zod";

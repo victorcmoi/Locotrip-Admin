@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { experienceSchema } from './experience';
 
 export enum GuideStatus {
   LOCAL = 'local',
@@ -70,7 +71,7 @@ export const guideSchema = z.object({
   updated_at: z.any().optional(),
   documents: z.array(guideDocumentSchema).optional(),
   availabilities: z.array(guideAvailabilitySchema).optional(),
-  experiences: z.array(z.any()).optional(),
+  experiences: z.array(experienceSchema).optional(),
 }).passthrough();
 
 export const guidesSchema = z.array(guideSchema);

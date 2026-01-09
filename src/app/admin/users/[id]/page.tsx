@@ -2,14 +2,14 @@
 
 import { useParams, useRouter } from "next/navigation";
 import { ArrowLeftIcon, CheckCircleIcon, XCircleIcon } from "@heroicons/react/24/outline";
-import { useUser } from "@/services/users/getUser";
-import { useGuideByUserId } from "@/services/guides/getGuide";
+import { useGetUser } from "@/services/users/getUser";
 import { UserRole } from "@/schemas/user";
 import AdminRoutes from "@/utils/routes";
 import { GuideStatus, VerificationStatus } from "@/schemas/guide";
 import dayjs from "dayjs";
 import "dayjs/locale/fr";
 import relativeTime from "dayjs/plugin/relativeTime";
+import { useGuideExperiences } from "@/services/guides/getGuideExperiences";
 
 dayjs.extend(relativeTime);
 dayjs.locale("fr");
@@ -19,15 +19,12 @@ export default function Page() {
   const router = useRouter();
   const userId = params.id as string;
 
-  const { data: user, isLoading: isLoadingUser, error: errorUser } = useUser(userId);
-  const { data: guidesArray, isLoading: isLoadingGuide, error: errorGuide } = useGuideByUserId(
-    userId,
-    user?.role === UserRole.GUIDE
-  );
+  const { data: user, isLoading: isLoadingUser, error: errorUser } = useGetUser(userId);
+  const { data: experiences, isLoading: isLoadingExperiences, error: errorExperiences } = useGuideExperiences(user?.guide?.id as string);
 
-  const guide = guidesArray && guidesArray.length > 0 ? guidesArray[0] : null;
-
-  if (isLoadingUser) {
+  console.log(experiences);
+  
+  if (isLoadingUser || isLoadingExperiences) {
     return (
       <div className="space-y-12 pt-8">
         <div className="p-12 text-center">
@@ -128,61 +125,46 @@ export default function Page() {
 
       {user.role === UserRole.GUIDE && (
         <>
-          {isLoadingGuide ? (
-            <div className="bg-white p-6 rounded-lg shadow-sm border-t-4 border-t-surfie-green-600">
-              <div className="text-center py-8">
-                <div className="inline-block animate-spin rounded-full h-8 w-8 border-4 border-surfie-green-200 border-t-surfie-green-600"></div>
-                <p className="mt-3 text-gray-600">Chargement du profil guide...</p>
-              </div>
-            </div>
-          ) : errorGuide || !guide ? (
-            <div className="bg-white p-6 rounded-lg shadow-sm border-t-4 border-t-surfie-green-600">
-              <div className="text-center py-8">
-                <XCircleIcon className="h-12 w-12 text-gray-400 mx-auto mb-3" />
-                <p className="text-gray-600 font-medium">Aucun profil guide trouvé pour cet utilisateur.</p>
-                <p className="text-gray-500 text-sm mt-1">Le profil guide n'a pas encore été créé ou est inactif.</p>
-              </div>
-            </div>
-          ) : (
+          {user?.guide ? (
             <>
               <div className="bg-white p-6 rounded-lg shadow-sm border-t-4 border-t-surfie-green-600">
                 <h2 className="text-2xl font-bold text-gray-900 mb-6">Profil Guide</h2>
                 <div className="space-y-6">
                   <div>
                     <p className="text-sm font-semibold text-surfie-green-800 mb-1">Biographie</p>
-                    <p className="text-gray-900">{guide.bio || "Aucune biographie"}</p>
+                    <p className="text-gray-900">{user?.guide.bio || "Aucune biographie"}</p>
                   </div>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
                       <p className="text-sm font-semibold text-surfie-green-800 mb-1">Langues parlées</p>
-                      <p className="text-gray-900">{guide.languages || "Non renseigné"}</p>
+                      <p className="text-gray-900">{user?.guide.languages || "Non renseigné"}</p>
                     </div>
                     <div>
                       <p className="text-sm font-semibold text-surfie-green-800 mb-1">Années d'expérience</p>
                       <p className="text-gray-900">
-                        {guide.years_of_experience !== null && guide.years_of_experience !== undefined
-                          ? `${guide.years_of_experience} an${guide.years_of_experience > 1 ? "s" : ""}`
+                        {user?.guide.years_of_experience !== null && user?.guide.years_of_experience !== undefined
+                          ? `${user?.guide.years_of_experience} an${user?.guide.years_of_experience > 1 ? "s" : ""}`
                           : "Non renseigné"}
                       </p>
                     </div>
                     <div>
                       <p className="text-sm font-semibold text-surfie-green-800 mb-1">Statut du guide</p>
                       <span
-                        className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-bold uppercase ${guide.guide_status === GuideStatus.PRO
+                        className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-bold uppercase ${user?.guide.guide_status === GuideStatus.PRO
                           ? "bg-purple-600 text-white"
                           : "bg-blue-600 text-white"
                           }`}
                       >
-                        {guide.guide_status === GuideStatus.PRO ? "Professionnel" : "Local"}
+                        {user?.guide.guide_status === GuideStatus.PRO ? "Professionnel" : "Local"}
                       </span>
                     </div>
                     <div>
                       <p className="text-sm font-semibold text-surfie-green-800 mb-1">Pays</p>
-                      <p className="text-gray-900">{guide.country || "Non renseigné"}</p>
+                      <p className="text-gray-900">{user?.guide.country || "Non renseigné"}</p>
                     </div>
                     <div className="flex items-center gap-2">
                       <p className="text-sm font-semibold text-surfie-green-800">Carte professionnelle :</p>
-                      {guide.pro_card ? (
+                      {user?.guide.pro_card ? (
                         <CheckCircleIcon className="h-6 w-6 text-green-600" />
                       ) : (
                         <XCircleIcon className="h-6 w-6 text-red-600" />
@@ -190,23 +172,23 @@ export default function Page() {
                     </div>
                     <div className="flex items-center gap-2">
                       <p className="text-sm font-semibold text-surfie-green-800">Profil actif :</p>
-                      {guide.is_active ? (
+                      {user?.guide.is_active ? (
                         <CheckCircleIcon className="h-6 w-6 text-green-600" />
                       ) : (
                         <XCircleIcon className="h-6 w-6 text-red-600" />
                       )}
                     </div>
                   </div>
-                  {guide.internal_comment && (
+                  {user?.guide.internal_comment && (
                     <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4">
                       <p className="text-sm font-semibold text-yellow-800 mb-1">Commentaire interne</p>
-                      <p className="text-gray-900">{guide.internal_comment}</p>
+                      <p className="text-gray-900">{user?.guide.internal_comment}</p>
                     </div>
                   )}
                 </div>
               </div>
 
-              {guide.documents && guide.documents.length > 0 && (
+              {user?.guide.documents && user?.guide.documents.length > 0 && (
                 <div className="bg-white p-6 rounded-lg shadow-sm border-t-4 border-t-surfie-green-600">
                   <h2 className="text-2xl font-bold text-gray-900 mb-6">Documents de vérification</h2>
                   <div className="overflow-hidden rounded-lg border-2 border-gray-200">
@@ -228,7 +210,7 @@ export default function Page() {
                         </tr>
                       </thead>
                       <tbody className="divide-y divide-gray-100 bg-white">
-                        {guide.documents.map((doc) => (
+                        {user?.guide.documents.map((doc) => (
                           <tr key={doc.id}>
                             <td className="px-6 py-4 text-sm font-semibold text-gray-900">
                               {doc.document_type}
@@ -263,11 +245,11 @@ export default function Page() {
                 </div>
               )}
 
-              {guide.experiences && guide.experiences.length > 0 && (
+              {experiences && experiences.length > 0 && (
                 <div className="bg-white p-6 rounded-lg shadow-sm border-t-4 border-t-surfie-green-600">
                   <h2 className="text-2xl font-bold text-gray-900 mb-6">Expériences proposées</h2>
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    {guide.experiences.map((exp: any) => (
+                    {experiences.map((exp: any) => (
                       <div key={exp.id} className="border-2 border-gray-200 rounded-lg p-4 hover:border-surfie-green-600 transition-all">
                         <h3 className="font-bold text-lg text-gray-900 mb-2">{exp.title}</h3>
                         <div className="space-y-2 text-sm">
@@ -301,6 +283,14 @@ export default function Page() {
                 </div>
               )}
             </>
+          ) : (
+            <div className="bg-white p-6 rounded-lg shadow-sm border-t-4 border-t-surfie-green-600">
+              <div className="text-center py-8">
+                <XCircleIcon className="h-12 w-12 text-gray-400 mx-auto mb-3" />
+                <p className="text-gray-600 font-medium">Aucun profil guide trouvé pour cet utilisateur.</p>
+                <p className="text-gray-500 text-sm mt-1">Le profil guide n'a pas encore été créé ou est inactif.</p>
+              </div>
+            </div>
           )}
         </>
       )}
@@ -319,12 +309,6 @@ export default function Page() {
               <p className="text-sm font-semibold text-surfie-green-800 mb-1">Avis laissés</p>
               <p className="text-3xl font-bold text-gray-900">
                 {user.reviews?.length || 0}
-              </p>
-            </div>
-            <div className="bg-gray-50 p-4 rounded-lg">
-              <p className="text-sm font-semibold text-surfie-green-800 mb-1">Abonnements</p>
-              <p className="text-3xl font-bold text-gray-900">
-                {user.subscriptions?.length || 0}
               </p>
             </div>
           </div>
