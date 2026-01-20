@@ -4,6 +4,7 @@ import { SupportTicketStatus, updateTicketResponseSchema, UpdateTicketResponse }
 
 export interface UpdateTicketDto {
   status?: SupportTicketStatus;
+  closed_at?: string;
 }
 
 const updateTicket = async (id: string, data: UpdateTicketDto): Promise<UpdateTicketResponse> => {

@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useRef, useEffect } from "react";
+import dayjs from "dayjs";
 import { SupportTicketStatus } from "@/schemas/ticket";
 import { useUpdateTicket } from "@/services/tickets/updateTicket";
 import { ChevronDownIcon } from "@heroicons/react/24/outline";
@@ -55,19 +56,36 @@ export default function TicketStatusBadge({
       return;
     }
 
-    updateTicket(
-      { id: ticketId, data: { status: newStatus } },
-      {
-        onSuccess: () => {
-          setIsOpen(false);
-          onStatusUpdated();
-        },
-        onError: (error) => {
-          console.error("Erreur lors de la mise à jour du statut:", error);
-          alert("Erreur lors de la mise à jour du statut du ticket");
-        },
-      }
-    );
+    if (newStatus === SupportTicketStatus.CLOSED) {
+      updateTicket(
+        { id: ticketId, data: { status: newStatus, closed_at: dayjs().toISOString() } },
+        {
+          onSuccess: () => {
+            setIsOpen(false);
+            onStatusUpdated();
+          },
+          onError: (error) => {
+            console.error("Erreur lors de la mise à jour du statut:", error);
+            alert("Erreur lors de la mise à jour du statut du ticket");
+          },
+        }
+      );
+    } else {
+      updateTicket(
+        { id: ticketId, data: { status: newStatus } },
+        {
+          onSuccess: () => {
+            setIsOpen(false);
+            onStatusUpdated();
+          },
+          onError: (error) => {
+            console.error("Erreur lors de la mise à jour du statut:", error);
+            alert("Erreur lors de la mise à jour du statut du ticket");
+          },
+        }
+      );      
+    }
+
   };
 
   return (
