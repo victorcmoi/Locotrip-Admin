@@ -20,7 +20,7 @@ export default function Page() {
   const userId = params.id as string;
 
   const { data: user, isLoading: isLoadingUser, error: errorUser } = useGetUser(userId);
-  const { data: experiences, isLoading: isLoadingExperiences, error: errorExperiences } = useGuideExperiences(user?.guide?.id as string);
+  const { data: experiences, isLoading: isLoadingExperiences } = useGuideExperiences(user?.guide?.id as string);
 
   console.log(experiences);
   
@@ -91,7 +91,7 @@ export default function Page() {
             <p className="text-gray-900">{user.birth_date ? dayjs(user.birth_date).format("D MMMM YYYY") : "Non renseigné"}</p>
           </div>
           <div>
-            <p className="text-sm font-semibold text-surfie-green-800 mb-1">Date d'inscription</p>
+            <p className="text-sm font-semibold text-surfie-green-800 mb-1">Date d&apos;inscription</p>
             <p className="text-gray-900">{user.created_at ? dayjs(user.created_at).format("D MMMM YYYY") : "Non renseigné"}</p>
           </div>
           <div className="flex items-center gap-2">
@@ -140,7 +140,7 @@ export default function Page() {
                       <p className="text-gray-900">{user?.guide.languages || "Non renseigné"}</p>
                     </div>
                     <div>
-                      <p className="text-sm font-semibold text-surfie-green-800 mb-1">Années d'expérience</p>
+                      <p className="text-sm font-semibold text-surfie-green-800 mb-1">Années d&apos;expérience</p>
                       <p className="text-gray-900">
                         {user?.guide.years_of_experience !== null && user?.guide.years_of_experience !== undefined
                           ? `${user?.guide.years_of_experience} an${user?.guide.years_of_experience > 1 ? "s" : ""}`
@@ -202,7 +202,7 @@ export default function Page() {
                             Statut
                           </th>
                           <th className="px-6 py-4 text-left text-xs font-bold text-white uppercase tracking-wider">
-                            Date d'upload
+                            Date d&apos;upload
                           </th>
                           <th className="px-6 py-4 text-left text-xs font-bold text-white uppercase tracking-wider">
                             Date de vérification
@@ -249,7 +249,7 @@ export default function Page() {
                 <div className="bg-white p-6 rounded-lg shadow-sm border-t-4 border-t-surfie-green-600">
                   <h2 className="text-2xl font-bold text-gray-900 mb-6">Expériences proposées</h2>
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    {experiences.map((exp: any) => (
+                    {experiences.map((exp) => (
                       <div key={exp.id} className="border-2 border-gray-200 rounded-lg p-4 hover:border-surfie-green-600 transition-all">
                         <h3 className="font-bold text-lg text-gray-900 mb-2">{exp.title}</h3>
                         <div className="space-y-2 text-sm">
@@ -288,7 +288,7 @@ export default function Page() {
               <div className="text-center py-8">
                 <XCircleIcon className="h-12 w-12 text-gray-400 mx-auto mb-3" />
                 <p className="text-gray-600 font-medium">Aucun profil guide trouvé pour cet utilisateur.</p>
-                <p className="text-gray-500 text-sm mt-1">Le profil guide n'a pas encore été créé ou est inactif.</p>
+                <p className="text-gray-500 text-sm mt-1">Le profil guide n&apos;a pas encore été créé ou est inactif.</p>
               </div>
             </div>
           )}

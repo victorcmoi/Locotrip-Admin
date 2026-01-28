@@ -5,6 +5,7 @@ import Modal from "@/components/Globals/Modal";
 import { useCreateUser } from "@/services/users/createUser";
 import { CreateUserSchema, UserRole } from "@/schemas/user";
 import { z } from "zod";
+import { toast } from "sonner";
 
 interface CreateUserModalProps {
   isOpen: boolean;
@@ -49,6 +50,7 @@ export default function CreateUserModal({ isOpen, onClose }: CreateUserModalProp
 
       createUser(validatedData, {
         onSuccess: () => {
+          toast.success("Utilisateur créé avec succès");
           setFormData({
             email: "",
             firstName: "",
@@ -61,6 +63,7 @@ export default function CreateUserModal({ isOpen, onClose }: CreateUserModalProp
       });
     } catch (err) {
       if (err instanceof z.ZodError) {
+        toast.error("Une erreur est survenue lors de la création de l'utilisateur");
         const fieldErrors: Record<string, string> = {};
         err.errors.forEach((error) => {
           if (error.path[0]) {
@@ -90,7 +93,7 @@ export default function CreateUserModal({ isOpen, onClose }: CreateUserModalProp
         {error && (
           <div className="bg-red-50 border-l-4 border-red-600 p-4 rounded">
             <p className="text-sm text-red-800 font-medium">
-              Une erreur est survenue lors de la création de l'utilisateur.
+              Une erreur est survenue lors de la création de l&apos;utilisateur.
             </p>
             <p className="text-xs text-red-700 mt-1">{error.message}</p>
           </div>

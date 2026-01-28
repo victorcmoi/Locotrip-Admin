@@ -1,9 +1,13 @@
 import { useMutation } from "@tanstack/react-query";
 import { ApiRequest } from "../instance";
-import { SupportTicketStatus, updateTicketResponseSchema, UpdateTicketResponse } from "@/schemas/ticket";
+import { 
+  updateTicketResponseSchema, 
+  UpdateTicketResponse,
+  SupportTicketStatus 
+} from "@/schemas/ticket";
 
 export interface UpdateTicketDto {
-  status?: SupportTicketStatus;
+  status?: typeof SupportTicketStatus[keyof typeof SupportTicketStatus];
   closed_at?: string;
 }
 

@@ -1,12 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { ApiRequest } from '@/services/instance';
-import { z } from 'zod';
-
-const deleteUserResponseSchema = z.object({
-  message: z.string().optional(),
-}).passthrough();
-
-type DeleteUserResponse = z.infer<typeof deleteUserResponseSchema>;
+import { deleteUserResponseSchema, DeleteUserResponse } from '@/schemas/user';
 
 export const deleteUser = async (userId: string, reason?: string) => {
   const body = reason ? { reason } : undefined;

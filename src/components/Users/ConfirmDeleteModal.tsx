@@ -40,7 +40,7 @@ export default function ConfirmDeleteModal({
           </div>
           <div className="flex-1">
             <p className="text-sm text-gray-700">
-              Êtes-vous sûr de vouloir supprimer l'utilisateur{" "}
+              Êtes-vous sûr de vouloir supprimer l&apos;utilisateur{" "}
               <strong className="font-bold text-gray-900">{userName}</strong> ?
             </p>
           </div>

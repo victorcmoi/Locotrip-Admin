@@ -11,12 +11,13 @@ import relativeTime from "dayjs/plugin/relativeTime";
 import CreateUserModal from "@/components/Users/CreateUserModal";
 import ConfirmDeleteModal from "@/components/Users/ConfirmDeleteModal";
 import { useDeleteUser } from "@/services/users/deleteUser";
+import { toast } from "sonner";
 
 dayjs.extend(relativeTime);
 dayjs.locale("fr");
 
 export default function Page() {
-  const [roleFilter, setRoleFilter] = useState<UserRole | "">("");
+  const [roleFilter, setRoleFilter] = useState<typeof UserRole[keyof typeof UserRole] | "">("");
   const [searchQuery, setSearchQuery] = useState("");
   const [debouncedSearch, setDebouncedSearch] = useState("");
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
@@ -50,10 +51,12 @@ export default function Page() {
     if (userToDelete) {
       deleteUser({ userId: userToDelete.id, reason }, {
         onSuccess: () => {
+          toast.success("Utilisateur supprimé avec succès");
           setIsDeleteModalOpen(false);
           setUserToDelete(null);
         },
         onError: () => {
+          toast.error("Une erreur est survenue lors de la suppression de l'utilisateur");
           setIsDeleteModalOpen(false);
           setUserToDelete(null);
         },
@@ -114,7 +117,7 @@ export default function Page() {
             <select
               id="role"
               value={roleFilter}
-              onChange={(e) => setRoleFilter(e.target.value as UserRole | "")}
+              onChange={(e) => setRoleFilter(e.target.value as typeof UserRole[keyof typeof UserRole] | "")}
               className="block w-full rounded-lg border-2 border-gray-200 py-2.5 px-3 text-gray-900 focus:border-surfie-green-600 focus:ring-2 focus:ring-surfie-green-600/20 sm:text-sm transition-all"
             >
               <option value="">Tous les rôles</option>

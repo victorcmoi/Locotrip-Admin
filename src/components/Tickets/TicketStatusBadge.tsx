@@ -5,10 +5,11 @@ import dayjs from "dayjs";
 import { SupportTicketStatus } from "@/schemas/ticket";
 import { useUpdateTicket } from "@/services/tickets/updateTicket";
 import { ChevronDownIcon } from "@heroicons/react/24/outline";
+import { toast } from "sonner";
 
 interface TicketStatusBadgeProps {
   ticketId: string;
-  currentStatus: SupportTicketStatus;
+  currentStatus: typeof SupportTicketStatus[keyof typeof SupportTicketStatus];
   onStatusUpdated: () => void;
 }
 
@@ -50,7 +51,7 @@ export default function TicketStatusBadge({
     };
   }, [isOpen]);
 
-  const handleStatusChange = (newStatus: SupportTicketStatus) => {
+  const handleStatusChange = (newStatus: typeof SupportTicketStatus[keyof typeof SupportTicketStatus]) => {
     if (newStatus === currentStatus) {
       setIsOpen(false);
       return;
@@ -61,12 +62,13 @@ export default function TicketStatusBadge({
         { id: ticketId, data: { status: newStatus, closed_at: dayjs().toISOString() } },
         {
           onSuccess: () => {
+            toast.success("Statut du ticket mis à jour");
             setIsOpen(false);
             onStatusUpdated();
           },
           onError: (error) => {
             console.error("Erreur lors de la mise à jour du statut:", error);
-            alert("Erreur lors de la mise à jour du statut du ticket");
+            toast.error("Erreur lors de la mise à jour du statut du ticket");
           },
         }
       );
@@ -75,12 +77,13 @@ export default function TicketStatusBadge({
         { id: ticketId, data: { status: newStatus } },
         {
           onSuccess: () => {
+            toast.success("Statut du ticket mis à jour");
             setIsOpen(false);
             onStatusUpdated();
           },
           onError: (error) => {
             console.error("Erreur lors de la mise à jour du statut:", error);
-            alert("Erreur lors de la mise à jour du statut du ticket");
+            toast.error("Erreur lors de la mise à jour du statut du ticket");
           },
         }
       );      

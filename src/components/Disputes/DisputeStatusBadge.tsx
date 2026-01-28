@@ -4,10 +4,11 @@ import React, { useState, useRef, useEffect } from "react";
 import { DisputeStatus, disputeStatusLabels } from "@/schemas/dispute";
 import { useUpdateDispute } from "@/services/disputes/updateDispute";
 import { ChevronDownIcon } from "@heroicons/react/24/outline";
+import { toast } from "sonner";
 
 interface DisputeStatusBadgeProps {
   disputeId: string;
-  currentStatus: DisputeStatus;
+  currentStatus: typeof DisputeStatus[keyof typeof DisputeStatus];
   onStatusUpdated: () => void;
 }
 
@@ -50,7 +51,7 @@ export default function DisputeStatusBadge({
     };
   }, [isOpen]);
 
-  const handleStatusChange = (newStatus: DisputeStatus) => {
+  const handleStatusChange = (newStatus: typeof DisputeStatus[keyof typeof DisputeStatus]) => {
     if (newStatus === currentStatus) {
       setIsOpen(false);
       return;
@@ -65,7 +66,7 @@ export default function DisputeStatusBadge({
         },
         onError: (error) => {
           console.error("Erreur lors de la mise à jour du statut:", error);
-          alert("Erreur lors de la mise à jour du statut du litige");
+          toast.error("Erreur lors de la mise à jour du statut du litige");
         },
       }
     );

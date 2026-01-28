@@ -1,47 +1,39 @@
 import { z } from 'zod';
 import { experienceSchema } from './experience';
+import { guideDocumentSchema } from './document';
+import { 
+  GuideStatusEnum, 
+  AvailabilityStatusEnum,
+  GuideStatusValues,
+  VerificationStatusValues,
+  DocumentTypeValues,
+  AvailabilityStatusValues,
+} from './enums';
 
-export enum GuideStatus {
-  LOCAL = 'local',
-  PRO = 'pro',
-}
+// Re-export enum values for backward compatibility
+export const GuideStatus = GuideStatusValues;
+export const VerificationStatus = VerificationStatusValues;
+export const DocumentType = DocumentTypeValues;
+export const AvailabilityStatus = AvailabilityStatusValues;
 
-export enum VerificationStatus {
-  PENDING = 'pending',
-  VERIFIED = 'verified',
-  REJECTED = 'rejected',
-}
+// Re-export types for backward compatibility
+export type { GuideStatus as GuideStatusType } from './enums';
+export type { VerificationStatus as VerificationStatusType } from './enums';
+export type { DocumentType as DocumentTypeType } from './enums';
+export type { AvailabilityStatus as AvailabilityStatusType } from './enums';
 
-export enum DocumentType {
-  CV = 'CV',
-  DIPLOMA = 'diploma',
-  PROOF_OF_RESIDENCE = 'proof_of_residence',
-}
-
-export enum AvailabilityStatus {
-  AVAILABLE = 'available',
-  UNAVAILABLE = 'unavailable',
-  BLOCKED = 'blocked',
-}
-
-const guideDocumentSchema = z.object({
-  id: z.string().uuid(),
-  guide_id: z.string().uuid(),
-  document_type: z.nativeEnum(DocumentType),
-  verification_status: z.nativeEnum(VerificationStatus),
-  verification_comment: z.string().nullable(),
-  upload_date: z.string().or(z.date()),
-  verification_date: z.string().or(z.date()).nullable(),
-}).passthrough();
-
-const guideAvailabilitySchema = z.object({
+// Guide availability schema
+export const guideAvailabilitySchema = z.object({
   id: z.string().uuid(),
   guide_id: z.string().uuid(),
   start_date: z.string().or(z.date()),
   end_date: z.string().or(z.date()),
-  status: z.nativeEnum(AvailabilityStatus),
+  status: AvailabilityStatusEnum,
 }).passthrough();
 
+export type GuideAvailabilitySchema = z.infer<typeof guideAvailabilitySchema>;
+
+// Main guide schema
 export const guideSchema = z.object({
   id: z.string(),
   user_id: z.string().optional(),
@@ -51,6 +43,8 @@ export const guideSchema = z.object({
       email: z.string().email().optional(),
       firstName: z.string().optional(),
       lastName: z.string().optional(),
+      first_name: z.string().optional(),
+      last_name: z.string().optional(),
       role: z.string().optional(),
     })
     .passthrough()
@@ -74,12 +68,32 @@ export const guideSchema = z.object({
   experiences: z.array(experienceSchema).optional(),
 }).passthrough();
 
-export const guidesSchema = z.array(guideSchema);
-
-export const guideApiResponseSchema = z.array(guideSchema);
-
 export type GuideSchema = z.infer<typeof guideSchema>;
+
+// Array of guides
+export const guidesSchema = z.array(guideSchema);
 export type GuidesSchema = z.infer<typeof guidesSchema>;
+
+// Guide API response (array)
+export const guideApiResponseSchema = z.array(guideSchema);
 export type GuideApiResponseSchema = z.infer<typeof guideApiResponseSchema>;
-export type GuideDocumentSchema = z.infer<typeof guideDocumentSchema>;
-export type GuideAvailabilitySchema = z.infer<typeof guideAvailabilitySchema>;
+
+// Re-export document schema for backward compatibility
+export { guideDocumentSchema, type GuideDocumentSchema } from './document';
+
+// Update guide DTO schema
+export const updateGuideSchema = z.object({
+  guide_status: GuideStatusEnum.optional(),
+  pro_card: z.boolean().optional(),
+  internal_comment: z.string().optional(),
+});
+
+export type UpdateGuideInput = z.infer<typeof updateGuideSchema>;
+
+// Response schema for updating a guide
+export const updateGuideResponseSchema = z.object({
+  id: z.string(),
+  guide_status: z.string(),
+}).passthrough();
+
+export type UpdateGuideResponse = z.infer<typeof updateGuideResponseSchema>;

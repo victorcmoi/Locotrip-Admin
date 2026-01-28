@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import Modal from "@/components/Globals/Modal";
-import { DisputeSchema, disputeStatusLabels } from "@/schemas/dispute";
+import { DisputeSchema } from "@/schemas/dispute";
 import { EyeIcon } from "@heroicons/react/24/outline";
 import dayjs from "dayjs";
 import "dayjs/locale/fr";

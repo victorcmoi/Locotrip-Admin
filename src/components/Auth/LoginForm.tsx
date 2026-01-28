@@ -19,10 +19,10 @@ export default function LoginForm() {
           redirect: false,
           email: e.currentTarget.email.value,
           password: e.currentTarget.password.value,
-        }).then(({ error }: any) => {
+        }).then((error) => {
           if (error) {
             setLoading(false);
-            toast.error(error);
+            toast.error('Une erreur est survenue lors de la connexion.');
           } else {
             router.replace(Routes.dashboard());
           }

@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { useTickets } from "@/services/tickets/getTickets";
-import { SupportTicketStatus, SupportTicketSchema } from "@/schemas/ticket";
+import { SupportTicketStatus } from "@/schemas/ticket";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
@@ -15,11 +15,9 @@ dayjs.extend(relativeTime);
 dayjs.locale("fr");
 
 export default function Page() {
-  const [statusFilter, setStatusFilter] = useState<SupportTicketStatus | "">("");
+  const [statusFilter, setStatusFilter] = useState<typeof SupportTicketStatus[keyof typeof SupportTicketStatus] | "">("");
   const [searchQuery, setSearchQuery] = useState("");
   const [debouncedSearch, setDebouncedSearch] = useState("");
-  const [selectedTicket, setSelectedTicket] = useState<SupportTicketSchema | null>(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -92,7 +90,7 @@ export default function Page() {
             <select
               id="status"
               value={statusFilter}
-              onChange={(e) => setStatusFilter(e.target.value as SupportTicketStatus | "")}
+              onChange={(e) => setStatusFilter(e.target.value as typeof SupportTicketStatus[keyof typeof SupportTicketStatus] | "")}
               className="block w-full rounded-lg border-2 border-gray-200 py-2.5 px-3 text-gray-900 focus:border-surfie-green-600 focus:ring-2 focus:ring-surfie-green-600/20 sm:text-sm transition-all"
             >
               <option value="">Tous les statuts</option>

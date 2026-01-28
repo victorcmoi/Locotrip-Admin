@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { ApiRequest } from "../instance";
 import { z } from "zod";
-import { ticketMessageSchema, sendTicketMessageSchema, SendTicketMessageInput } from "@/schemas/ticket";
+import { ticketMessageSchema, SendTicketMessageInput } from "@/schemas/ticket";
 
 
 export async function sendTicketMessage( data: SendTicketMessageInput ): Promise<z.infer<typeof ticketMessageSchema>> {

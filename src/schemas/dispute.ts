@@ -1,32 +1,27 @@
 import { z } from "zod";
 import { userApiResponseSchema } from "./user";
-import { experienceSchema } from "./experience";
+import { bookingSchema } from "./booking";
+import { DisputeStatusEnum, DisputeStatusValues } from "./enums";
 
-export enum DisputeStatus {
-  OPEN = "open",
-  PENDING = "pending",
-  RESOLVED = "resolved",
-  REJECTED = "rejected",
-}
+// Re-export enum values for backward compatibility
+export const DisputeStatus = DisputeStatusValues;
+export type { DisputeStatus as DisputeStatusType } from "./enums";
 
-export const disputeStatusLabels: Record<DisputeStatus, string> = {
-  [DisputeStatus.OPEN]: "Ouvert",
-  [DisputeStatus.PENDING]: "En attente",
-  [DisputeStatus.RESOLVED]: "Résolu",
-  [DisputeStatus.REJECTED]: "Rejeté",
+// Labels for dispute status (French)
+export const disputeStatusLabels: Record<string, string> = {
+  [DisputeStatusValues.OPEN]: "Ouvert",
+  [DisputeStatusValues.PENDING]: "En attente",
+  [DisputeStatusValues.RESOLVED]: "Résolu",
+  [DisputeStatusValues.REJECTED]: "Rejeté",
 };
 
-const bookingSchema = z.object({
-  id: z.string().uuid(),
-  experience: experienceSchema.optional().nullable(),
-}).passthrough();
-
+// Main dispute schema
 export const disputeSchema = z.object({
   id: z.string().uuid(),
   booking_id: z.string().uuid(),
   user_id: z.string().uuid(),
   reason: z.string(),
-  status: z.nativeEnum(DisputeStatus),
+  status: DisputeStatusEnum,
   admin_id: z.string().uuid().nullable().optional(),
   created_at: z.string().datetime().optional(),
   resolution_date: z.string().datetime().optional().nullable(),
@@ -37,20 +32,21 @@ export const disputeSchema = z.object({
 
 export type DisputeSchema = z.infer<typeof disputeSchema>;
 
+// Array of disputes
 export const disputesSchema = z.array(disputeSchema);
-
 export type DisputesSchema = z.infer<typeof disputesSchema>;
 
+// Update dispute DTO schema
 export const updateDisputeSchema = z.object({
-  status: z.nativeEnum(DisputeStatus).optional(),
+  status: DisputeStatusEnum.optional(),
   admin_id: z.string().uuid().optional(),
 });
 
 export type UpdateDisputeInput = z.infer<typeof updateDisputeSchema>;
 
+// Response schema for updating a dispute
 export const updateDisputeResponseSchema = z.object({
   message: z.string().optional(),
 }).passthrough();
 
 export type UpdateDisputeResponse = z.infer<typeof updateDisputeResponseSchema>;
-

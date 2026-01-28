@@ -15,7 +15,7 @@ dayjs.extend(relativeTime);
 dayjs.locale("fr");
 
 export default function Page() {
-  const [statusFilter, setStatusFilter] = useState<DisputeStatus | "">("");
+  const [statusFilter, setStatusFilter] = useState<typeof DisputeStatus[keyof typeof DisputeStatus] | "">("");
   const [searchQuery, setSearchQuery] = useState("");
   const [debouncedSearch, setDebouncedSearch] = useState("");
 
@@ -85,7 +85,7 @@ export default function Page() {
             <select
               id="status"
               value={statusFilter}
-              onChange={(e) => setStatusFilter(e.target.value as DisputeStatus | "")}
+              onChange={(e) => setStatusFilter(e.target.value as typeof DisputeStatus[keyof typeof DisputeStatus] | "")}
               className="block w-full rounded-lg border-2 border-gray-200 py-2.5 px-3 text-gray-900 focus:border-surfie-green-600 focus:ring-2 focus:ring-surfie-green-600/20 sm:text-sm transition-all"
             >
               <option value="">Tous les statuts</option>
