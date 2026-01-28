@@ -44,6 +44,9 @@ export default async function Layout({ children }: LayoutProps) {
               <Link href={AdminRoutes.tickets()} className="flex items-center gap-2 rounded-md px-3 py-2 hover:bg-black/10 duration-300">
                 Tickets
               </Link>
+              <Link href={AdminRoutes.disputes()} className="flex items-center gap-2 rounded-md px-3 py-2 hover:bg-black/10 duration-300">
+                Litiges
+              </Link>
               <Link href={AdminRoutes.guides()} className="flex items-center gap-2 rounded-md px-3 py-2 hover:bg-black/10 duration-300">
                 Guides
               </Link>

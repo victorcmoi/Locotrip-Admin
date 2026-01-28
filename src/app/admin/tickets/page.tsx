@@ -31,16 +31,6 @@ export default function Page() {
 
   const { data: tickets, isLoading, error, mutate } = useTickets();
 
-  const handleOpenModal = (ticket: SupportTicketSchema) => {
-    setSelectedTicket(ticket);
-    setIsModalOpen(true);
-  };
-
-  const handleCloseModal = () => {
-    setIsModalOpen(false);
-    setSelectedTicket(null);
-  };
-
   const handleReplySent = async () => {
     // Refresh the tickets list
     await mutate();
@@ -146,7 +136,7 @@ export default function Page() {
                   <td className="px-6 py-4 text-sm font-semibold text-gray-900">{ticket.subject}</td>
                   <td className="px-3 py-2 text-sm text-gray-900">
                     <Link href={`/admin/users/${ticket.user.id}`} className="flex flex-col px-3 py-2 rounded-lg hover:bg-gray-50 transition-all">
-                      <span className="font-medium">{ticket.user.first_name} {ticket.user.last_name}</span>
+                      <span className="font-medium">{ticket.user.first_name} {ticket.user.last_name} - {ticket.user.role}</span>
                       <span className="text-xs text-gray-500">{ticket.user.email}</span>
                     </Link>
                   </td>
@@ -158,13 +148,10 @@ export default function Page() {
                     />
                   </td>
                   <td className="px-6 py-4 text-sm text-gray-700">
-                    <button
-                      onClick={() => handleOpenModal(ticket)}
-                      className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-surfie-green-100 text-surfie-green-700 font-bold hover:bg-surfie-green-200 transition-colors cursor-pointer"
-                      title="Voir les messages"
-                    >
-                      {ticket.messages?.length || 0}
-                    </button>
+                    <TicketMessagesModal
+                      ticket={ticket}
+                      onReplySent={handleReplySent}
+                    />
                   </td>
                   <td className="px-6 py-4 text-sm text-gray-700">
                     {ticket.created_at ? dayjs(ticket.created_at).format("D MMMM YYYY") : "Non renseigné"}
@@ -183,15 +170,6 @@ export default function Page() {
         <div className="text-sm">
           Affichage de <strong className="font-bold">{filteredTickets.length}</strong> ticket{filteredTickets.length > 1 ? 's' : ''} sur <strong className="font-bold">{tickets.length}</strong> au total
         </div>
-      )}
-
-      {selectedTicket && (
-        <TicketMessagesModal
-          ticket={selectedTicket}
-          isOpen={isModalOpen}
-          onClose={handleCloseModal}
-          onReplySent={handleReplySent}
-        />
       )}
     </div>
   );

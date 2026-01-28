@@ -33,6 +33,10 @@ class AdminRoutes {
   public static tickets() {
     return `${this.PATH_ADMIN}/tickets`;
   }
+
+  public static disputes() {
+    return `${this.PATH_ADMIN}/disputes`;
+  }
 }
 
 export default AdminRoutes;

@@ -23,6 +23,26 @@ export const reviewSchema = z.object({
   updated_at: z.string().or(z.date()).optional(),
 }).passthrough();
 
+// Guide schema for nested guide data in experience
+// Guide is a separate model that has a relation to user
+export const guideUserSchema = z.object({
+  id: z.string().uuid(),
+  email: z.string().email(),
+  first_name: z.string(),
+  last_name: z.string(),
+  phone: z.string().nullable().optional(),
+}).passthrough();
+
+export const guideInExperienceSchema = z.object({
+  id: z.string().uuid(),
+  user_id: z.string().uuid(),
+  bio: z.string().nullable().optional(),
+  languages: z.string().nullable().optional(),
+  years_of_experience: z.number().nullable().optional(),
+  guide_status: z.string().optional(),
+  user: guideUserSchema.optional().nullable(),
+}).passthrough();
+
 // Main experience schema
 export const experienceSchema = z.object({
   id: z.string().uuid(),
@@ -40,6 +60,7 @@ export const experienceSchema = z.object({
   deleted_at: z.string().or(z.date()).nullable().optional(),
   city: citySchema.optional(),
   reviews: z.array(reviewSchema).optional(),
+  guide: guideInExperienceSchema.optional().nullable(),
 }).passthrough();
 
 // Array of experiences response

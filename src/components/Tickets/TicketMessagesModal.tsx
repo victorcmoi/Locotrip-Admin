@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import Modal from "@/components/Globals/Modal";
 import { SupportTicketSchema } from "@/schemas/ticket";
 import { PaperAirplaneIcon } from "@heroicons/react/24/outline";
@@ -15,21 +15,36 @@ dayjs.locale("fr");
 
 interface TicketMessagesModalProps {
   ticket: SupportTicketSchema;
-  isOpen: boolean;
-  onClose: () => void;
   onReplySent: () => void;
 }
 
 export default function TicketMessagesModal({
   ticket,
-  isOpen,
-  onClose,
   onReplySent,
-}: TicketMessagesModalProps) {
+}: TicketMessagesModalProps) {  
   const { data: session } = useSession();
+  const [isOpen, setIsOpen] = useState(false);
   const [replyContent, setReplyContent] = useState("");
   const [error, setError] = useState<string | null>(null);
   const { mutate: sendMessage, isPending } = useSendTicketMessage();
+
+  const openModal = () => setIsOpen(true);
+  const closeModal = () => {
+    setIsOpen(false);
+    setError(null);
+  };
+
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  useEffect(() => {
+    if (isOpen) {
+      setTimeout(scrollToBottom, 100);
+    }
+  }, [isOpen]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -55,6 +70,8 @@ export default function TicketMessagesModal({
         onSuccess: () => {
           setReplyContent("");
           onReplySent();
+          // Scroll vers le nouveau message après un court délai
+          setTimeout(scrollToBottom, 100);
         },
         onError: (err) => {
           setError(err instanceof Error ? err.message : "Une erreur est survenue");
@@ -68,9 +85,17 @@ export default function TicketMessagesModal({
   );
 
   return (
+    <>
+    <button
+      onClick={openModal}
+      className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-surfie-green-100 text-surfie-green-700 font-bold hover:bg-surfie-green-200 transition-colors cursor-pointer"
+      title="Voir les messages"
+    >
+      {ticket.messages?.length || 0}
+    </button>
     <Modal 
       isOpen={isOpen} 
-      onClose={onClose} 
+      onClose={closeModal} 
       title={ticket.subject}
       size="large"
     >
@@ -115,12 +140,13 @@ export default function TicketMessagesModal({
             );
           })
         )}
+        <div ref={messagesEndRef} />
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-4 mt-6">
         <div>
           <label htmlFor="reply" className="block text-sm font-semibold text-surfie-green-800 mb-2">
-            Répondre au ticket
+            Répondre
           </label>
           <textarea
             id="reply"
@@ -141,7 +167,7 @@ export default function TicketMessagesModal({
         <div className="flex gap-3">
           <button
             type="button"
-            onClick={onClose}
+            onClick={closeModal}
             disabled={isPending}
             className="flex-1 px-4 py-2.5 border-2 border-gray-300 text-gray-700 font-semibold rounded-lg hover:bg-gray-50 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
           >
@@ -167,5 +193,6 @@ export default function TicketMessagesModal({
         </div>
       </form>
     </Modal>
+    </>
   );
 }
