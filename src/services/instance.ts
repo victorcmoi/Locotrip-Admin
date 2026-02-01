@@ -77,6 +77,11 @@ export class ApiRequest<T> {
   }
 
   private async run(response: Response): Promise<T> {
+    // Handle 204 No Content responses
+    if (response.status === 204) {
+      return undefined as T;
+    }
+
     const body = await response.json();
 
     if (response.ok) {

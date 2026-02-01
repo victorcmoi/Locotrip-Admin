@@ -10,6 +10,8 @@ import "dayjs/locale/fr";
 import Link from "next/link";
 import DisputeStatusBadge from "@/components/Disputes/DisputeStatusBadge";
 import DisputeDetailsModal from "@/components/Disputes/DisputeDetailsModal";
+import AdminRoutes from "@/utils/routes";
+import BookingDetailsModal from "@/components/Bookings/BookingDetailsModal";
 
 dayjs.extend(relativeTime);
 dayjs.locale("fr");
@@ -119,7 +121,7 @@ export default function Page() {
                 <th className="px-6 py-4 text-left text-xs font-bold text-white uppercase tracking-wider">Motif</th>
                 <th className="px-6 py-4 text-left text-xs font-bold text-white uppercase tracking-wider">Utilisateur</th>
                 <th className="px-6 py-4 text-left text-xs font-bold text-white uppercase tracking-wider">Guide</th>
-                <th className="px-6 py-4 text-left text-xs font-bold text-white uppercase tracking-wider">Expérience</th>
+                <th className="px-6 py-4 text-left text-xs font-bold text-white uppercase tracking-wider">Réservation</th>
                 <th className="px-6 py-4 text-left text-xs font-bold text-white uppercase tracking-wider">Statut</th>
                 <th className="px-6 py-4 text-left text-xs font-bold text-white uppercase tracking-wider">Création</th>
                 <th className="px-6 py-4 text-left text-xs font-bold text-white uppercase tracking-wider">Actions</th>
@@ -152,7 +154,25 @@ export default function Page() {
                     )}
                   </td>
                   <td className="px-6 py-4 text-sm text-gray-700">
-                    {dispute.booking?.experience?.title || "-"}
+                    {dispute.booking ? (
+                      <BookingDetailsModal
+                        booking={dispute.booking}
+                        experience={dispute.booking.experience || undefined}
+                        showBoth={true}
+                        trigger={
+                          <div className="block hover:bg-gray-50 transition-colors p-2 rounded-lg group text-left">
+                            <p className="font-semibold text-gray-900">
+                              Réservation #{dispute.booking.id.slice(0, 8)}...
+                            </p>
+                            {dispute.booking.experience && (
+                              <p className="text-gray-500 text-xs line-clamp-1">{dispute.booking.experience.title}</p>
+                            )}
+                          </div>
+                        }
+                      />
+                    ) : (
+                      "-"
+                    )}
                   </td>
                   <td className="px-6 py-4 text-sm">
                     <DisputeStatusBadge

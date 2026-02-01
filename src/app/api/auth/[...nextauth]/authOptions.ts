@@ -2,16 +2,7 @@ import type { NextAuthOptions } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
 
 declare module 'next-auth' {
-  interface Session {
-    accessToken: string;
-    user: {
-      id: string;
-      email: string;
-      firstName: string;
-      lastName: string;
-      role: string;
-    };
-  }
+
   interface User {
     accessToken: string;
     id: string;
@@ -19,6 +10,10 @@ declare module 'next-auth' {
     firstName: string;
     lastName: string;
     role: string;
+  }
+  interface Session {
+    accessToken: string;
+    user: User;
   }
 }
 
@@ -50,6 +45,7 @@ export const authOptions: NextAuthOptions = {
     async session({ session, token }) {
       session.accessToken = token.accessToken as string;
       session.user = {
+        accessToken: token.accessToken as string,
         id: token.id as string,
         email: token.email as string,
         firstName: token.firstName as string,

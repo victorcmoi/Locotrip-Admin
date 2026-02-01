@@ -10,10 +10,6 @@ class AdminRoutes {
     return this.PATH_LOGIN;
   }
 
-  public static settings() {
-    return `${this.PATH_ADMIN}/parametre`;
-  }
-
   public static guides() {
     return `${this.PATH_ADMIN}/guides`;
   }
@@ -36,6 +32,14 @@ class AdminRoutes {
 
   public static disputes() {
     return `${this.PATH_ADMIN}/disputes`;
+  }
+
+  public static experiences() {
+    return `${this.PATH_ADMIN}/experiences`;
+  }
+
+  public static experienceDetail(id: string) {
+    return `${this.PATH_ADMIN}/experiences/${id}`;
   }
 }
 

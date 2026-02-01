@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import { experienceSchema } from './experience';
 import { guideDocumentSchema } from './document';
+import { mediaSchema } from './media';
 import { 
   GuideStatusEnum, 
   AvailabilityStatusEnum,
@@ -64,6 +65,7 @@ export const guideSchema = z.object({
   created_at: z.any().optional(),
   updated_at: z.any().optional(),
   documents: z.array(guideDocumentSchema).optional(),
+  medias: z.array(mediaSchema).optional(),
   availabilities: z.array(guideAvailabilitySchema).optional(),
   experiences: z.array(experienceSchema).optional(),
 }).passthrough();

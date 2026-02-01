@@ -19,8 +19,8 @@ export default function LoginForm() {
           redirect: false,
           email: e.currentTarget.email.value,
           password: e.currentTarget.password.value,
-        }).then((error) => {
-          if (error) {
+        }).then((response) => {
+          if (response?.error) {
             setLoading(false);
             toast.error('Une erreur est survenue lors de la connexion.');
           } else {

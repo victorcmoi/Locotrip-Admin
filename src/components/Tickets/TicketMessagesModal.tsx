@@ -88,7 +88,7 @@ export default function TicketMessagesModal({
     <>
     <button
       onClick={openModal}
-      className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-surfie-green-100 text-surfie-green-700 font-bold hover:bg-surfie-green-200 transition-colors cursor-pointer"
+      className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-gray-100 text-gray-700 font-bold hover:bg-gray-200 transition-colors cursor-pointer"
       title="Voir les messages"
     >
       {ticket.messages?.length || 0}

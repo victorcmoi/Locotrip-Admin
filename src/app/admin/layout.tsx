@@ -36,7 +36,7 @@ export default async function Layout({ children }: LayoutProps) {
           <div className="bg-surfie-green-700 flex flex-col justify-between flex-1 p-4 rounded-lg">
             <nav className="flex flex-col gap-2 text-white font-semibold">
               <Link href={AdminRoutes.dashboard()} className="flex items-center gap-2 rounded-md px-3 py-2 hover:bg-black/10 duration-300">
-                Dashboard
+                Tableau de bord
               </Link>
               <Link href={AdminRoutes.users()} className="flex items-center gap-2 rounded-md px-3 py-2 hover:bg-black/10 duration-300">
                 Utilisateurs
@@ -49,9 +49,6 @@ export default async function Layout({ children }: LayoutProps) {
               </Link>
               <Link href={AdminRoutes.guides()} className="flex items-center gap-2 rounded-md px-3 py-2 hover:bg-black/10 duration-300">
                 Guides
-              </Link>
-              <Link href={AdminRoutes.settings()} className="flex items-center gap-2 rounded-md px-3 py-2 hover:bg-black/10 duration-300">
-                Paramètre
               </Link>
             </nav>
             <div className="mt-1 text-sm text-white flex flex-col gap-1 cursor-pointer hover:bg-black/10 duration-300 rounded-md px-4 py-4">

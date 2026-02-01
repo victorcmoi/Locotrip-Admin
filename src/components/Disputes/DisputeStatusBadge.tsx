@@ -77,7 +77,7 @@ export default function DisputeStatusBadge({
       <button
         onClick={() => setIsOpen(!isOpen)}
         disabled={isPending}
-        className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wide shadow-sm text-white transition-all ${
+        className={`inline-flex items-center text-left gap-1.5 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wide shadow-sm text-white transition-all ${
           currentStatusOption?.color || "bg-gray-200"
         } ${
           isPending
@@ -92,7 +92,7 @@ export default function DisputeStatusBadge({
           </>
         ) : (
           <>
-            <span>{currentStatusOption?.label || currentStatus}</span>
+            <span className="whitespace-nowrap">{currentStatusOption?.label || currentStatus}</span>
             <ChevronDownIcon className="h-3 w-3" />
           </>
         )}

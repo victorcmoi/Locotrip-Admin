@@ -8,6 +8,9 @@ import dayjs from "dayjs";
 import "dayjs/locale/fr";
 import Link from "next/link";
 import DisputeStatusBadge from "./DisputeStatusBadge";
+import AdminRoutes from "@/utils/routes";
+import { DisputeStatus } from "@/schemas/dispute";
+import BookingDetailsModal from "@/components/Bookings/BookingDetailsModal";
 
 dayjs.locale("fr");
 
@@ -139,56 +142,45 @@ export default function DisputeDetailsModal({
           </section>
 
 
-          {/* Expérience concernée */}
+          {/* Réservation concernée */}
           <section>
             <h3 className="text-sm font-bold text-gray-800 uppercase tracking-wider mb-3">
-              Expérience concernée
+              Réservation concernée
             </h3>
-            {dispute.booking?.experience ? (
-              <div>
-                <p className="text-sm font-semibold text-gray-900">
-                  {dispute.booking.experience.title}
-                </p>
-                {dispute.booking.experience.description && (
-                  <p className="text-xs text-gray-600 mt-1 line-clamp-2">
-                    {dispute.booking.experience.description}
-                  </p>
-                )}
-                <div className="flex gap-4 mt-2">
-                  <span className="text-xs text-gray-600">
-                    {dispute.booking.experience.price} €
-                  </span>
-                  <span className="text-xs text-gray-600">
-                    {dispute.booking.experience.duration} min
-                  </span>
-                  {dispute.booking.experience.city && (
-                    <span className="text-xs text-gray-600">
-                      {dispute.booking.experience.city.name}, {dispute.booking.experience.city.country}
-                    </span>
-                  )}
-                </div>
-              </div>
+            {dispute.booking ? (
+              <BookingDetailsModal
+                booking={dispute.booking}
+                experience={dispute.booking.experience || undefined}
+                showBoth={true}
+                trigger={
+                  <div className="block cursor-pointer bg-gray-50 hover:bg-gray-100 transition-colors rounded-lg p-4 group text-left">
+                    <p className="text-sm font-semibold text-gray-900 group-hover:text-surfie-green-600 transition-colors">
+                      Réservation #{dispute.booking.id}
+                    </p>
+                    {dispute.booking.experience && (
+                      <p className="text-xs text-gray-600 mt-1">
+                        {dispute.booking.experience.title}
+                      </p>
+                    )}
+                    
+                    <div className="flex gap-4 mt-2">
+                       <span className="text-xs text-gray-600">
+                         {String(dispute.booking.total_price || 0)} €
+                       </span>
+                       <span className="text-xs text-gray-600"> 
+                          {String(dispute.booking.number_of_participants || 1)} participants
+                       </span>
+                       <span className="text-xs text-gray-600">
+                         {dayjs(dispute.booking.booking_date as string | Date).format("D MMMM YYYY")}
+                       </span>
+                    </div>
+                  </div>
+                }
+              />
             ) : (
-              <p className="text-sm text-gray-500">Expérience non disponible</p>
+              <p className="text-sm text-gray-500">Réservation non disponible</p>
             )}
           </section>
-
-          {/* Administrateur assigné */}
-          {dispute.admin && (
-            <section>
-              <h3 className="text-sm font-bold text-gray-800 uppercase tracking-wider mb-3">
-                Administrateur
-              </h3>
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm font-semibold text-gray-900">
-                    {dispute.admin.first_name} {dispute.admin.last_name}
-                  </p>
-                  <p className="text-xs text-gray-600">{dispute.admin.email}</p>
-                </div>
-              </div>
-            </section>
-          )}
         </div>
       </Modal>
     </>
