@@ -1,7 +1,7 @@
 "use client";
 
 import { useParams, useRouter } from "next/navigation";
-import { ArrowLeftIcon, StarIcon, UserCircleIcon, CalendarIcon, MapPinIcon } from "@heroicons/react/24/outline";
+import { ArrowLeftIcon, StarIcon, CalendarIcon, MapPinIcon } from "@heroicons/react/24/outline";
 import { StarIcon as StarIconSolid } from "@heroicons/react/24/solid";
 import { useExperience } from "@/services/experiences/getExperience";
 import { deleteReview } from "@/services/reviews/deleteReview";

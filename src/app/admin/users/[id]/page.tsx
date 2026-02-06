@@ -6,7 +6,7 @@ import { ArrowLeftIcon, CheckCircleIcon, XCircleIcon, StarIcon, UserCircleIcon }
 import { useGetUser } from "@/services/users/getUser";
 import { UserRole } from "@/schemas/user";
 import AdminRoutes from "@/utils/routes";
-import { GuideStatus, VerificationStatus } from "@/schemas/guide";
+import { GuideStatus } from "@/schemas/guide";
 import dayjs from "dayjs";
 import "dayjs/locale/fr";
 import relativeTime from "dayjs/plugin/relativeTime";
@@ -41,6 +41,7 @@ export default function Page() {
 
   // Aggregate all bookings from all experiences, keeping experience info
   const allGuideBookings = experiences?.flatMap(exp => 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (exp.bookings || []).map((booking: any) => ({
       booking,
       experience: {
@@ -447,6 +448,7 @@ export default function Page() {
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-gray-100 bg-white">
+                    {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
                     {user.bookings.map((booking: any) => (
                       <tr key={booking.id} className="hover:bg-gray-50">
                         <td className="px-6 py-4 text-sm">
@@ -519,6 +521,7 @@ export default function Page() {
             
             {user.reviews && user.reviews.length > 0 ? (
               <div className="space-y-4">
+                {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
                 {user.reviews.map((review: any) => (
                   <ReviewCard 
                     key={review.id} 

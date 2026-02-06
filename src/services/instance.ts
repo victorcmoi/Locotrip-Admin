@@ -53,7 +53,7 @@ export class ApiRequest<T> {
     return this.request(url, { method: "GET" });
   }
 
-  public async post(url: string, body?: any): Promise<T> {
+  public async post(url: string, body?: unknown): Promise<T> {
     return this.request(url, {
       method: "POST",
       body: body ? JSON.stringify(body) : undefined,
@@ -61,7 +61,7 @@ export class ApiRequest<T> {
     });
   }
 
-  public async put(url: string, body: any): Promise<T> {
+  public async put(url: string, body: unknown): Promise<T> {
     return this.request(url, {
       method: "PUT",
       body: JSON.stringify(body),
@@ -69,7 +69,7 @@ export class ApiRequest<T> {
     });
   }
 
-  public async patch(url: string, body: any): Promise<T> {
+  public async patch(url: string, body: unknown): Promise<T> {
     return this.request(url, {
       method: "PATCH",
       body: JSON.stringify(body),
@@ -77,7 +77,7 @@ export class ApiRequest<T> {
     });
   }
 
-  public async delete(url: string, body?: any): Promise<T> {
+  public async delete(url: string, body?: unknown): Promise<T> {
     return this.request(url, {
       method: "DELETE",
       body: body ? JSON.stringify(body) : undefined,

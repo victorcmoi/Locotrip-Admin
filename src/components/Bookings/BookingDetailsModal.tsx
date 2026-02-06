@@ -11,6 +11,7 @@ import AdminRoutes from "@/utils/routes";
 dayjs.locale("fr");
 
 interface BookingDetailsModalProps {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   booking: any;
   experience?: {
     id: string;

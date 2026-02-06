@@ -3,7 +3,7 @@ import { ApiRequest } from '@/services/instance';
 import { usersApiResponseSchema, UsersApiResponseSchema, UserRole } from '@/schemas/user';
 
 export interface GetUsersParams {
-  role?: UserRole;
+  role?: typeof UserRole[keyof typeof UserRole];
   search?: string;
   page?: number;
   limit?: number;

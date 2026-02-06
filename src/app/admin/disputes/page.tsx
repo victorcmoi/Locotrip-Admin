@@ -10,7 +10,7 @@ import "dayjs/locale/fr";
 import Link from "next/link";
 import DisputeStatusBadge from "@/components/Disputes/DisputeStatusBadge";
 import DisputeDetailsModal from "@/components/Disputes/DisputeDetailsModal";
-import AdminRoutes from "@/utils/routes";
+
 import BookingDetailsModal from "@/components/Bookings/BookingDetailsModal";
 
 dayjs.extend(relativeTime);

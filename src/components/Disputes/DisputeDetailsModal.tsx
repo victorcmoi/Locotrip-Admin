@@ -8,8 +8,6 @@ import dayjs from "dayjs";
 import "dayjs/locale/fr";
 import Link from "next/link";
 import DisputeStatusBadge from "./DisputeStatusBadge";
-import AdminRoutes from "@/utils/routes";
-import { DisputeStatus } from "@/schemas/dispute";
 import BookingDetailsModal from "@/components/Bookings/BookingDetailsModal";
 
 dayjs.locale("fr");
