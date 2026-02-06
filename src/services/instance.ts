@@ -23,6 +23,15 @@ const getAuthHeaders = async () => {
   return headers;
 };
 
+export class ApiError extends Error {
+  statusCode: number;
+
+  constructor(message: string, statusCode: number) {
+    super(message);
+    this.statusCode = statusCode;
+  }
+}
+
 export class ApiRequest<T> {
   private readonly _schema: z.ZodSchema;
 
@@ -76,6 +85,8 @@ export class ApiRequest<T> {
     });
   }
 
+
+
   private async run(response: Response): Promise<T> {
     // Handle 204 No Content responses
     if (response.status === 204) {
@@ -97,6 +108,7 @@ export class ApiRequest<T> {
     const errorMessage = Array.isArray(error.message)
       ? error.message.join(", ")
       : error.message || error.error || "unknown error";
-    throw new Error(errorMessage);
+    
+    throw new ApiError(errorMessage, response.status);
   }
 }
