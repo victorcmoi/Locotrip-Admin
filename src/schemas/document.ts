@@ -6,7 +6,7 @@ export const guideDocumentSchema = z.object({
   id: z.string().uuid(),
   guide_id: z.string().uuid(),
   document_type: DocumentTypeEnum,
-  document_url: z.string().url().optional(),
+  document_url: z.string().nullish(),
   verification_status: VerificationStatusEnum,
   verification_comment: z.string().nullable(),
   upload_date: z.string().or(z.date()),

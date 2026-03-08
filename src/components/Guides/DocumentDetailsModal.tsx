@@ -2,8 +2,16 @@
 
 import React, { useState, useEffect } from "react";
 import Modal from "@/components/Globals/Modal";
-import { GuideDocumentSchema, VerificationStatus, DocumentType } from "@/schemas/guide";
-import { CheckCircleIcon, ClockIcon, XCircleIcon } from "@heroicons/react/24/outline";
+import {
+  GuideDocumentSchema,
+  VerificationStatus,
+  DocumentType,
+} from "@/schemas/guide";
+import {
+  CheckCircleIcon,
+  ClockIcon,
+  XCircleIcon,
+} from "@heroicons/react/24/outline";
 import dayjs from "dayjs";
 import "dayjs/locale/fr";
 import DocumentStatusBadge from "./DocumentStatusBadge";
@@ -18,7 +26,9 @@ interface DocumentDetailsModalProps {
   onStatusUpdated?: () => void;
 }
 
-const getDocumentTypeName = (type: typeof DocumentType[keyof typeof DocumentType] | string): string => {
+const getDocumentTypeName = (
+  type: (typeof DocumentType)[keyof typeof DocumentType] | string,
+): string => {
   switch (type) {
     case DocumentType.CV:
     case "CV":
@@ -29,6 +39,12 @@ const getDocumentTypeName = (type: typeof DocumentType[keyof typeof DocumentType
     case DocumentType.PROOF_OF_RESIDENCE:
     case "proof_of_residence":
       return "Justificatif de domicile";
+    case DocumentType.GUIDE_CARD:
+    case "guide_card":
+      return "Carte professionnelle";
+    case DocumentType.OTHER:
+    case "other":
+      return "Autre";
     default:
       return type;
   }
@@ -53,7 +69,7 @@ export default function DocumentDetailsModal({
   const [isOpen, setIsOpen] = useState(false);
   const [comment, setComment] = useState(document.verification_comment || "");
   const [isEditing, setIsEditing] = useState(false);
-  
+
   const { mutate: updateDocument, isPending } = useUpdateGuideDocument();
 
   // Sync local document state when prop changes (after query refetch)
@@ -77,10 +93,10 @@ export default function DocumentDetailsModal({
 
   const handleSaveComment = () => {
     updateDocument(
-      { 
-        guideId, 
-        documentId: document.id, 
-        data: { verification_comment: comment || null } 
+      {
+        guideId,
+        documentId: document.id,
+        data: { verification_comment: comment || null },
       },
       {
         onSuccess: () => {
@@ -92,7 +108,7 @@ export default function DocumentDetailsModal({
           console.error("Erreur lors de la sauvegarde du commentaire:", error);
           toast.error("Erreur lors de la sauvegarde du commentaire");
         },
-      }
+      },
     );
   };
 
@@ -111,7 +127,9 @@ export default function DocumentDetailsModal({
         title="Voir les détails du document"
       >
         <span>{getDocumentTypeName(document.document_type)}</span>
-        <StatusIconData.icon className={`h-4 w-4 ml-1 ${StatusIconData.color}`} />
+        <StatusIconData.icon
+          className={`h-4 w-4 ml-1 ${StatusIconData.color}`}
+        />
       </button>
 
       <Modal
@@ -128,22 +146,45 @@ export default function DocumentDetailsModal({
             </h3>
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <span className="text-xs text-gray-500 block pb-1">Type de document</span>
+                <span className="text-xs text-gray-500 block pb-1">
+                  Type de document
+                </span>
                 <span className="text-sm font-semibold text-gray-900">
                   {getDocumentTypeName(document.document_type)}
                 </span>
               </div>
               <div>
-                <span className="text-xs text-gray-500 block pb-1">Statut de vérification</span>
+                <span className="text-xs text-gray-500 block pb-1">
+                  Statut de vérification
+                </span>
                 <DocumentStatusBadge
                   guideId={guideId}
                   documentId={document.id}
-                  currentStatus={document.verification_status as typeof VerificationStatus[keyof typeof VerificationStatus]}
+                  currentStatus={
+                    document.verification_status as (typeof VerificationStatus)[keyof typeof VerificationStatus]
+                  }
                   onStatusUpdated={onStatusUpdated}
                 />
               </div>
             </div>
           </section>
+
+          {/* Lien vers le document */}
+          {document.document_url && (
+            <section>
+              <h3 className="text-sm font-bold text-surfie-green-800 uppercase tracking-wider mb-3">
+                Fichier
+              </h3>
+              <a
+                href={document.document_url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg bg-surfie-green-50 border border-surfie-green-200 text-surfie-green-700 hover:bg-surfie-green-100 transition-colors font-medium text-sm"
+              >
+                Ouvrir le document ↗
+              </a>
+            </section>
+          )}
 
           {/* Dates */}
           <section>
@@ -152,13 +193,17 @@ export default function DocumentDetailsModal({
             </h3>
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <span className="text-xs text-gray-500 block">Date d&apos;upload</span>
+                <span className="text-xs text-gray-500 block">
+                  Date d&apos;upload
+                </span>
                 <span className="text-sm font-medium text-gray-900 mt-1 block">
                   {formatDate(document.upload_date)}
                 </span>
               </div>
               <div>
-                <span className="text-xs text-gray-500 block">Date de vérification</span>
+                <span className="text-xs text-gray-500 block">
+                  Date de vérification
+                </span>
                 <span className="text-sm font-medium text-gray-900 mt-1 block">
                   {formatDate(document.verification_date)}
                 </span>
@@ -181,7 +226,7 @@ export default function DocumentDetailsModal({
                 </button>
               )}
             </div>
-            
+
             {isEditing ? (
               <div className="space-y-3">
                 <textarea
@@ -215,7 +260,9 @@ export default function DocumentDetailsModal({
                     {document.verification_comment}
                   </p>
                 ) : (
-                  <p className="text-sm text-gray-500 italic">Aucun commentaire</p>
+                  <p className="text-sm text-gray-500 italic">
+                    Aucun commentaire
+                  </p>
                 )}
               </>
             )}

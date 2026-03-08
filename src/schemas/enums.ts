@@ -21,7 +21,7 @@ export const AvailabilityStatusEnum = z.enum(['available', 'unavailable', 'block
 export type AvailabilityStatus = z.infer<typeof AvailabilityStatusEnum>;
 
 // Document Type Enum
-export const DocumentTypeEnum = z.enum(['CV', 'diploma', 'proof_of_residence']);
+export const DocumentTypeEnum = z.enum(['CV', 'diploma', 'proof_of_residence', 'guide_card', 'other']);
 export type DocumentType = z.infer<typeof DocumentTypeEnum>;
 
 // Media Type Enum
@@ -64,6 +64,8 @@ export const DocumentTypeValues = {
   CV: 'CV' as const,
   DIPLOMA: 'diploma' as const,
   PROOF_OF_RESIDENCE: 'proof_of_residence' as const,
+  GUIDE_CARD: 'guide_card' as const,
+  OTHER: 'other' as const,
 };
 
 export const AvailabilityStatusValues = {

@@ -2,8 +2,16 @@
 
 import React, { useState } from "react";
 import Modal from "@/components/Globals/Modal";
-import { GuideSchema, GuideStatus, VerificationStatus, DocumentType } from "@/schemas/guide";
-import { CheckBadgeIcon, ExclamationTriangleIcon } from "@heroicons/react/24/outline";
+import {
+  GuideSchema,
+  GuideStatus,
+  VerificationStatus,
+  DocumentType,
+} from "@/schemas/guide";
+import {
+  CheckBadgeIcon,
+  ExclamationTriangleIcon,
+} from "@heroicons/react/24/outline";
 import { useUpdateGuide } from "@/services/guides/updateGuide";
 import { toast } from "sonner";
 
@@ -12,7 +20,9 @@ interface ValidateGuideModalProps {
   onValidated?: () => void;
 }
 
-const getDocumentTypeName = (type: typeof DocumentType[keyof typeof DocumentType] | string): string => {
+const getDocumentTypeName = (
+  type: (typeof DocumentType)[keyof typeof DocumentType] | string,
+): string => {
   switch (type) {
     case DocumentType.CV:
     case "CV":
@@ -23,6 +33,12 @@ const getDocumentTypeName = (type: typeof DocumentType[keyof typeof DocumentType
     case DocumentType.PROOF_OF_RESIDENCE:
     case "proof_of_residence":
       return "Justificatif de domicile";
+    case DocumentType.GUIDE_CARD:
+    case "guide_card":
+      return "Carte professionnelle";
+    case DocumentType.OTHER:
+    case "other":
+      return "Autre";
     default:
       return type;
   }
@@ -37,7 +53,7 @@ export default function ValidateGuideModal({
 
   const documents = guide.documents || [];
   const unverifiedDocs = documents.filter(
-    (doc) => doc.verification_status !== VerificationStatus.VERIFIED
+    (doc) => doc.verification_status !== VerificationStatus.VERIFIED,
   );
   const allDocsVerified = unverifiedDocs.length === 0 && documents.length > 0;
   const hasNoDocuments = documents.length === 0;
@@ -61,7 +77,7 @@ export default function ValidateGuideModal({
           console.error("Erreur lors de la validation:", error);
           toast.error("Erreur lors de la validation du profil");
         },
-      }
+      },
     );
   };
 
@@ -86,9 +102,12 @@ export default function ValidateGuideModal({
           {/* Informations du guide */}
           <div className="bg-gray-50 rounded-lg p-4">
             <p className="font-semibold text-gray-900">
-              {String(guide.user?.first_name || "")} {String(guide.user?.last_name || "")}
+              {String(guide.user?.first_name || "")}{" "}
+              {String(guide.user?.last_name || "")}
             </p>
-            <p className="text-sm text-gray-500">{String(guide.user?.email || "")}</p>
+            <p className="text-sm text-gray-500">
+              {String(guide.user?.email || "")}
+            </p>
           </div>
 
           {/* Avertissement si documents non vérifiés */}
@@ -108,7 +127,8 @@ export default function ValidateGuideModal({
                         <li key={doc.id}>
                           {getDocumentTypeName(doc.document_type)} -{" "}
                           <span className="font-medium">
-                            {doc.verification_status === VerificationStatus.PENDING
+                            {doc.verification_status ===
+                            VerificationStatus.PENDING
                               ? "En attente"
                               : "Rejeté"}
                           </span>
